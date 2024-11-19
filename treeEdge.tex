@@ -1,0 +1,650 @@
+\documentclass{book}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{appendix}
+\usepackage{url}
+\usepackage{titlesec}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[shortlabels]{enumitem}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{fit, shapes.geometric, positioning}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+
+\theoremstyle{definition}
+\newtheorem{question}{Question}
+\newtheorem*{definition*}{Definition}
+\newtheorem{exercise}{Exercise}[chapter]
+\newtheorem*{exercise*}{Answer}
+
+\newtheoremstyle{colonstylebf}{}{}{\normalfont}{}{\bfseries}{:}{.5em}{}
+\theoremstyle{colonstylebf}
+\newtheorem*{question*}{Q}
+
+\newcommand{\set}[1]{\{#1\}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\spvdots}{\hspace{5pt} \vdots \hspace{5pt} }
+\newcommand*{\levelheight}{11mm}
+\newcommand*{\bigdots}{{\Large $\vdots$}}
+
+\titleformat{\subsubsection}[runin]
+  {\normalfont\normalsize\bfseries} % Format of the title
+  {\thesubsubsection} % Label
+  {.5em} % Separation between label and title text
+  {} % Before-code
+  [] % After-code
+  
+  \titleformat{\title}[block]
+  {\normalfont\Huge\scshape}
+  {\thetitle}
+  {1em}
+  {}
+  []
+
+\begin{document}
+\title{{\centering\Huge\textsc{The Puzzle Has a Point}}}
+\author{\Large Charles Kolozsvary}
+\date{}
+
+\maketitle
+
+\begin{quote}
+{\raggedleft {\sl To Nick\/}: \\ 
+\hfill {\sl For bringing to my attention the threat of certain crustaceans}}
+\end{quote}
+
+\chapter*{Preface}
+
+
+Each month, a quantitative trading firm called Jane Street shares a puzzle so abstract and
+complicated that you're left wondering who on earth could have come up with it.\footnote{Example: Consider 3-space partitioned into a grid of unit cubes. 
+Given a fixed positive real number $D$ and a random line segment of that length,
+what value $D$ maximizes the probability that the two endpoints of the
+segment lie in orthogonally adjacent unit cubes, and what is this maximal
+probability?} The answer: some nerd genius making way more money than you might think possible as someone whose job it is to solve puzzles like this
+every day.
+Putting aside whether you think a dense math problem like the one in the last FN really deserves to be called a puzzle,\footnote{(which it does)}
+its worth investigating how one might solve them.
+there's something worth investigating here, whether it's how a proprietary trading firm like Jane Street is so successful or
+how you'd go about solving these tricky problems.
+
+Maybe to the disappointment of a few, what follows will delve into the latter question, presenting
+solutions to a handful of Jane Street's puzzles.\footnote{For the time being, only a presentation of the August 2024 puzzle, \emph{Tree-edge Triage}, is included.}
+But we shouldn't despair: math has a lot going for it, at least in this author's opinion. It might be the most powerful, dynamic, and fascinating subject of all time.\footnote{To demonstrate this claim would be to teach all of mathematics, and no one has the time or skill to do this. But as the saying goes, ``don't let perfect be the enemy of good.'' We need to start somewhere, so we start here, now, with some puzzles.} However, like anything that's worth doing, math requires effort, for the experienced and uninitiated alike. The former\footnote{(those already versed in basic set and probability theory)} may wish to skip directly to Chapter \ref{statement}, and the latter needn't worry: The presentations are meant to be understood by anyone older than, say, fifteen.\footnote{This is not meant to make anyone feel discouraged, of course, if some ideas do not come easily; the intention of such a statement is rather that anyone (yes, anyone) can eventually understand what we're doing.}
+
+By the end of this unorthodox tour of mathematics, we'll have gained a handful of tools that will help us reach even greater heights and depths of the subject. Or, at the very least, we'll have solved some interesting puzzles. And, if you're still reading, you probably agree, as Jane Street also says, that ``solving puzzles just feels great.''
+
+\newpage
+
+$\phantom{\scalebox{72}{A}}$
+
+\begin{flushright}
+\begin{quote}
+\emph{Ask, and it shall be given you; seek, and ye shall find; knock, and it shall be opened unto you} --- Matthew 7:7
+\end{quote}
+\begin{quote}
+\emph{If you can't explain it to a six year old, you don't understand it yourself} --- Albert Einstein
+\end{quote}
+\end{flushright}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%SECTION%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Preliminaries}\label{prelim}
+The ``royal we'' in the preface is in fact accurate: this section includes exercises, and you are actually expected to do them. But don't worry;\footnote{Be happy.} the exercises are short and simple and their solutions are in Appendix \ref{answers}.\footnote{A final word of advice: give each exercise an honest attempt before consulting its solution; you'll learn more this way, and you'll learn faster.} 
+
+%So go on---take heart, and leap into the world of mathematics where adventure, mystery, and beauty await!
+
+\section{The Beginning}
+\begin{quote}
+\emph{Natural numbers were created by God, everything else is the work of men} — Kronecker (1823–1891)
+\end{quote}
+You might not think about it like this, but the very first thing you learned in math was how to count --- e.g., there are three
+apples over here and two over there, and if we put them together, there are five apples.
+\footnote{
+\centerline{INTERPOLATION: THE THING, NOT IN ITSELF} People lead disparate lives, and there is an incomprehensible range of possible experience. So it should be no surprise that there are many schools of thought when it comes to putting (or, rather, attempting to put) slippery philosophical musings precisely. The  we investigate here is \emph{abstraction}. The Oxford English Dictionary (OED) says that   there exists a word called `abstraction' which plays a crucial role in mathematics and  It's worth appreciating, too, the following leap in meaning that is often taken for granted: there is something \emph{the same} about a pair of apples, rhinos, rocks, zooxanthellae, etc. That \emph{thing} is, in itself, `the number two', and to give it the respect and distinction it deserves, we refer to it with a symbol that should remind us that we're interacting with something unusual: `2' (the unusual thing being \emph{abstraction}).}
+
+Existing in thought or as an idea but not having a physical or concrete existence
+
+The numbers involved in this basic form of counting are aptly\footnote{(monists would disagree)} called the \emph{natural numbers}. One is a natural number, and so is two and three and four and so on.\footnote{9001 is a natural number, too.}
+
+But, as almost everyone already knows, these aren't the only numbers. Some numbers are \dots \emph{\ \!unnatural}, if history is any measure. Zero and negative numbers, for instance, were adopted well after the naturals. And it isn't too hard to imagine why: neither of them can be thought of in the same straight-forward, tangible way as a natural number --- good luck pointing at zero or negative three apples. We need to think about these numbers a little differently, i.e., we need to recognize that each is a unique leap in abstraction: zero represents the absence of a quantity rather than its precise multiplicity (as with the naturals); and a negative number represents a {\sl reduction} in number rather than a number outright.  
+
+You might think a noun like ``abstraction'' overcomplicates a simple idea like zero or a negative number. You'd be wrong, however, or there would only be at most a disagreement on definitions, not real, capital `M' Meaning. 
+
+
+
+And there are even more numbers! We notice that some things can be considered as parts of a whole rather than whole things themselves: you can have half of an apple, or a quarter, or three seventh's and so on. But the trickery here is assuming that any kind of whole exists that can be considered in parts as opposed to everything being 
+
+
+\section{Sets}
+A set is a collection of distinct items or ``elements.'' Sets are written by listing their elements inside curly braces and can be represented by variables. Here are some example sets:
+\begin{enumerate}[label = (\arabic*)]
+\item $\set{terrier, poodle, Godzilla}$,
+\item\label{set2} $A = \set{a, \dots, z}$,
+\item\label{set3} $\N = \set{1, 2, 3, \dots}$.
+\end{enumerate}
+Ellipses `{$\dots$}' indicate implied elements that are tedious or impossible to write explicitly, as in items \ref{set2} and \ref{set3}, respectively. These examples also show that sets can be finite or infinite.\footnote{In fact, there are---in an abstract but rigorous sense---infinitely many and ever-growing kinds of infinities. But this is beyond our scope. For more on this, look up Cantor's Theorem.} The number of elements in a set $S$, known as its cardinality, is denoted $|S|$. For example, $|A| = 26$.
+
+\begin{exercise}\label{distinct}
+What is $|\{3, 3, 1, 2, 1, 3\}|$?
+\end{exercise}
+
+\subsection{The Cartesian product}
+The Cartesian product of two sets $S$ and $T$ is the set of all ordered pairs with the first element from $S$ and the second from $T$, denoted $S \times T$.
+For example, \[\set{1, 2} \times \set{a, b, c} = \set{(1, a), (1, b), (1, c), (2, a), (2, b), (2, c)}.\]
+\begin{exercise}\label{cartesianques}
+For finite $S$ and $T$, what is $|S \times T|$ in terms of $|S|$ and $|T|$?
+\end{exercise}
+
+The title of this subsection is a set that comes up a lot in mathematics. Putting aside rigor, the real numbers are those that can be written as an infinite string of digits, repeating or otherwise, such as $3.1415926\dots = \pi$ or $-0.0000000100003$. These numbers
+
+This brief description misses some important and fascinating details that the curious reader might want to look into by searching ``transcendental vs. algebraic numbers.''
+
+\subsection{Bounds of sets}
+A set may have lower (or upper) bounds when its elements can be ordered. For example, consider the set $H = \set{0, 1, 2, 3}$. The number $-100$ is a lower bound of $H$ because it is less than or equal to every element of $H$. However, there are greater lower bounds, such as $-99$, $-98$, and so on.
+\begin{exercise}\label{lowerbound}
+What is the greatest lower bound of $H$? Why?
+\end{exercise}
+
+We call the greatest lower bound of a set its \textit{infimum}. The minimum of a set is similar, it is the element that is less than every other element. 
+\begin{exercise}\label{reallower}
+Are the infimum and minimum of a set always the same? If they aren't, give an example.
+\end{exercise}
+
+\section{Binary Trees}
+Figure \ref{tree}: the circles are called nodes, and the lines connecting them are called edges. The topmost node is called the root, and the bottom nodes are called leaves. The root has two descendants (hence the adjective ``binary''), each of which has two descendants of their own and so on. The depth of a tree is the number of edges between the root and any of its leaves; this tree's depth is four.
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}
+[
+    scale = .65,
+    level 1/.style={sibling distance=60mm, level distance = \levelheight},
+    level 2/.style={sibling distance=30mm, level distance = \levelheight},
+    level 3/.style={sibling distance=15mm, level distance = \levelheight},
+    level 4/.style={sibling distance=7.5mm, level distance = \levelheight},
+    state/.style={circle,minimum size =.35cm, draw}
+]
+	\node[state] {}
+		child {node[state] {}
+			child {node[state] {}
+				child {node[state]{}
+					child {node[state]{}}
+					child {node[state]{}}
+				}
+				child {node[state]{}
+					child{node[state]{}}
+					child{node[state]{}}
+				}
+			}
+			child {node[state] {}
+				child {node[state]{}
+					child {node[state]{}}
+					child {node[state]{}}
+				}
+				child {node[state]{}
+					child{node[state]{}}
+					child{node[state]{}}
+				}
+			}
+		}
+		child {node[state] {}
+		    	child {node[state] {}
+				child {node[state]{}
+					child {node[state]{}}
+					child {node[state]{}}
+				}
+				child {node[state]{}
+					child{node[state]{}}
+					child{node[state]{}}
+				}
+			}
+		    	child {node[state] {}
+				child {node[state]{}
+					child {node[state]{}}
+					child {node[state]{}}
+				}
+				child {node[state]{}
+					child{node[state]{}}
+					child{node[state]{}}
+				}
+			}
+		};
+\end{tikzpicture}
+\caption{An example binary tree.}
+\label{tree}
+\end{figure}
+\begin{exercise}
+How many leaves does a binary tree of depth $n$ have?
+\end{exercise}
+
+\section{Probability}
+An event is \emph{random} when it cannot be predicted with complete certainty. The probability of an event $E$ is its likelihood of occurring, denoted $P(E)$. For example, the probability of rolling a 6 on a standard six-sided die (denoted ``d6'') is 1/6.
+
+If an event is guaranteed to happen, its probability is 1. So for any event $E$, $0 \leq P(E) \leq 1$.
+\begin{exercise}
+Why? \emph{Hint:} This is not a trick question.
+\end{exercise}
+For convenience, we can denote random events with variables. For example, let $D_n$ be the roll of a d$n$ (a standard $n$-sided die); then, again, $P(D_6 = 6) = 1/6$.
+
+However, finding the probability of an event can be challenging when the context is unclear (e.g., what is the probability you think of the number $42$?). Therefore, it's helpful to keep in mind the set of all possible outcomes (relevant to an event), called the \emph{sample space} and denoted $\Omega$. For example, $\Omega = \set{1, 2, 3, 4, 5, 6}$ when rolling a d6: each number represents the outcome that the d6 rolls that value.
+
+When $\Omega$ is finite and each event is equally likely, finding probabilities usually reduces to counting outcomes. Specifically:
+\begin{equation}\label{countprob}
+P(E) = \frac{\text{number of outcomes where $E$ occurs}}{\text{total number of outcomes}}.
+\end{equation}
+\begin{exercise}
+What is $P(D_6 \text{ is prime})$?\footnote{A prime number is only divisible by 1 and itself. But the first prime number is 2, not 1, because excluding 1 simplifies many theorems about primes.}
+\end{exercise}
+
+If outcomes are not equally likely, we can modify the sample space by assigning each event a number of outcomes proportional to its likelihood. For instance, if we have a weighted d4 where each number $x$ comes up $(10\cdot x)\%$ of the time, this would be equivalent to a d10 with the number 1 on one face, 2 on two faces, and so on. 
+\begin{exercise}\label{magiccoin}
+Imagine two coins, each with sides labelled 1 and 2. One coin, $F$, is fair,\footnote{(meaning each outcome is equally likely)} while the other one, $M$, is half-magic: if $F = 1$, then $M = 1$; otherwise, $M$ is fair. You flip $F$, then $M$. Describe a weighted die whose outcomes match the random variable $F + M$. \textit{Hint}: apply equation \eqref{countprob} and the preceding paragraph.
+\end{exercise}
+
+
+\subsubsection*{Independence.}
+Two random events are \emph{independent} if neither gives information about the likelihood of the other. For example, the first roll of a d6 gives no information about its second roll, so the two rolls are independent, unlike $M$ and $F$ in Exercise \ref{magiccoin}. Independent events are almost always easier to reason about than non-independent (i.e., dependent) events.
+
+\begin{exercise}
+Why? \emph{Hint}: compare the probability that the 100th roll of a d6 is 6 with the probability that the 100th roll of a \emph{special} d6 (identical to a standard one, except if you ever roll more than 20 of a number, it is replaced by the number 1) is 6.
+\end{exercise}
+
+
+\subsubsection*{Multiple events.}
+Events are usually composed of subevents. There are three fundamental operations that create new events from existing ones.
+\begin{enumerate}[label = (\arabic*)]
+\item Negation: The event where $E$ does not occur is written $\neg E$.
+\item\label{intersection} Intersection:
+The event where both $E$ and $F$ occur is written $\displaystyle E \cap F$.
+\item Union:  The event where $E$ or $F$ (or both) occur is written $E \cup F$.
+\end{enumerate}
+
+\begin{exercise}\label{q:neg}
+If $P(E) = p$, what is $P(\neg E)$?
+\end{exercise}
+\begin{exercise}\label{q:cap}
+Suppose events $E$ and $F$ are independent. Can you guess what $\displaystyle P(E \cap F)$ is? \emph{Hint}: Recall the Cartesian product.
+\end{exercise}
+\begin{exercise}\label{q:cup}
+Let $E$ and $F$ be any two events. What is $P(E \cup F)$ in terms of $P(E)$, $P(F)$, and $\displaystyle P(E \cap F)$? \emph{Hint}: Consider the event of rolling an even or prime number with a d6, and draw a Venn diagram.
+\end{exercise}
+
+
+\section{Polynomials}
+\subsubsection*{In general.}
+A polynomial is an expression made up of indeterminants where the only operations involved are addition, subtraction, and multiplication. For example $x^2 - x - 1$ is a polynomial made up of three terms and one indeterminant. This is a much clearer way of representing ``the product of a value with itself, subtracted by itself and 1,'' wouldn't you say?\footnote{We are lucky: mathematics was largely written in words before Ren\'e Descartes popularized symbolic notation in his ``La G\'eom\'etrie," published in 1637.}
+
+The degree of a polynomial is the highest power of any indeterminant. For example, $x^3 - 7x + y$ has degree 3. A polynomial is called quadratic if its degree is 2.
+
+\subsubsection*{Zeros and quadratic polynomials.}
+The zeros of a polynomial are, unsurprisingly, the values of the variable(s) that make the polynomial equal to zero. For example, the zeros of $x^2 - 5x + 6$ are $x = 3$ and $x = 2$. Finding the zeros of a linear (degree 1) polynomial is trivial, but less so for a quadratic.
+
+\begin{exercise}\label{completesquare}
+Find a formula for the zeros of a quadratic $p(x) = ax^2 + bx + c$ in terms of its coefficients, $a$, $b$, and $c$.\footnote{The coefficients $a$, $b$, and $c$ are not to be confused with indeterminants: they represent only one possible value, unlike indeterminants that represent several possible values. In the earlier polynomial, $a = 1$, $b = -5$ and $c = 6$.} \emph{Hint}: Can you turn $p(x)$ into a form that looks like $(x + d)^2 = e$?\footnote{$d$ and $e$ are not indeterminants; they are particular values, like $a$, $b$, and $c$.}
+\end{exercise}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%SECTION%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Tree-edge Triage}\label{statement}
+\noindent Aaron and Beren are playing a game that takes place within an infinite binary tree. At the start of the game every edge in the tree is independently labeled $A$ with probability $p$  and $B$ otherwise.\footnote{On average, then, $p$ represents the proportion of edges in the tree that are labeled $A$.} Both players are able to inspect all (infinitely many) of these labels $\ldots$ somehow. Then, starting with Aaron at the root, the players alternate turns moving a shared token down the tree (each turn the active player selects from the two descendants of the current node and moves the token along the edge to that node). If the token ever traverses an edge labeled $B$, Beren wins the game. Otherwise, Aaron wins.\footnote{This is the August 2024 puzzle, FYI, that can be found at \url{https://www.janestreet.com/puzzles/tree-edge-triage-index/}}
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}
+[
+    scale = 1.1,
+    level 1/.style={sibling distance=42mm, level distance = 1.2cm},
+    level 2/.style={sibling distance=22mm, level distance = 2.1cm},
+    level 3/.style={sibling distance = 10mm, level distance = 1cm},
+    level 4/.style={sibling distance = 5mm, level distance = .9cm},
+    ellip/.style={text height = 4mm},
+    game/.style={circle, draw, minimum size = .35cm, fill = none},
+    whole/.style={draw=black, very thick, inner sep = 25pt, text height = 0mm},
+    sub/.style={dashed, draw=black, very thick, inner sep=15pt}, % Style for grouping
+    ssub/.style={draw = black, very thick, inner sep = 3pt},
+    arrow/.style={draw, ->, color = RoyalBlue, line width = 1.7pt},
+]
+
+% Draw the binary tree with an edge label
+\node[game] (root) {}
+	child {node[game](11) {}
+		child {node[game] {}
+			child {node[game] {}
+				child {node[ellip] {\bigdots}}
+				child {node[ellip] {\bigdots}}
+			edge from parent node [left] {$A$}
+				}
+			child {node[game] {}
+				child {node[ellip] {\bigdots}}
+				child {node[ellip] {\bigdots}}
+			edge from parent node [right] {$B$}
+				}
+	edge from parent node [left] {$A$}
+			}
+		child {node[game](22) {}
+			child {node[game] {}
+				child {node[ellip] {\bigdots}}
+				child {node[ellip] {\bigdots}}
+			edge from parent node [left] {$B$}
+				}
+			child {node[game](34) {}
+				child {node[ellip] {\bigdots}}
+				child {node[ellip] {\bigdots}}
+			edge from parent node [right] {$B$}
+				}
+		edge from parent node [right] {$A$}
+			}
+	edge from parent node [above] {$A$}
+	}
+	child {node[game] {}
+		child {node[game] {}
+			child {node[game] {}
+				child {node[ellip] {\bigdots}}
+				child {node[ellip] {\bigdots}}
+			edge from parent node [left] {$B$}
+				}
+			child {node[game] {}
+				child {node[ellip] {\bigdots}}
+				child {node[ellip] {\bigdots}}
+			edge from parent node [right] {$A$}
+				}
+		edge from parent node [left] {$B$}
+			}
+		child {node[game] {}
+			child {node[game] {}
+				child {node[ellip] {\bigdots}}
+				child {node[ellip] {\bigdots}}
+			edge from parent node [left] {$B$}
+				}
+			child {node[game](s) {}
+				child {node[ellip] {\bigdots}}
+				child {node[ellip] {\bigdots}}
+			edge from parent node [right] {$A$}
+				}
+		edge from parent node [right] {$A$}
+			}
+	edge from parent node [above] {$B$}
+	};
+	\draw[arrow] (root) -- (11);
+	\draw[arrow] (11) -- (22);
+	\draw[arrow] (22) -- (34);
+\end{tikzpicture}
+\caption{An example game: Aaron chooses to go left to avoid immediate defeat. However, after Beren goes right, Aaron is forced to choose one of two $B$-edges, and Beren wins.}
+\label{exGame}
+\end{figure}
+
+\begin{question*}\label{infimum}
+What is the infimum of the set of probabilities $p$ for which Aaron has a nonzero probability of winning the game?
+\end{question*}
+This question is kind of dense for the sake of rigor that isn't that important right now. So here's another way to put it: what is the smallest average proportion of edges in the tree labelled $A$ such that Aaron still has a chance of winning?
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%SECTION%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Solution}\label{solution}
+Rather than tackling the entire infinite problem right away (which could be overwhelming), we first consider finite games restricted to finite binary trees. For these games we define the following events:
+\begin{itemize}
+\item Let $X_n$ denote Aaron wins a game that starts on \textbf{his} turn and lasts $n$ rounds.
+\item Let $Y_n$ denote Aaron wins a game that starts on \textbf{Beren's} turn and lasts $n$ rounds.
+\item Let $A_{\text{e}}$ denote edge $e$ is labelled $A$.
+\end{itemize}
+Now let's find some probabilities. The simplest one is $P(A_{e})$, which, by definition, is $p$ for any edge $e$. Next, it is clear that $X_1$ occurs when at least one of the two edges from the root, $e_1$ or $e_2$, is labeled $A$. Thus,
+\begin{align*}
+P(X_1) &= P(A_{e_1} \cup A_{e_2})\\
+&= P(A_{e_1}) + P(A_{e_2})- P(A_{e_1} \cap A_{e_2})\\
+&= 2p - p^2.
+\end{align*}
+Similarly, $Y_1$ occurs when both edges from the root are labelled $A$ (otherwise, Beren wins). Thus,
+\[P(Y_1) = P(A_{e_1} \cap A_{e_2}) = p^2.\]
+Why stop with $P(X_1)$ and $P(Y_1)$? Let's try to find $P(X_2)$. We could apply the same reasoning that got us $P(X_1)$, noting that $X_2$ occurs when either $e_1$ and its subsequent edges are labelled $A$ or $e_2$ and its subsequent edges are labelled A. But this approach becomes unwieldy as we consider more and more rounds. It would be nice if we could express $P(X_2)$ using what we already found---namely, $P(X_1)$ and $P(Y_1)$. And indeed, we can! The key is to realize that our events are composed of identical sub-events (see Figure \ref{subgames}), thanks to all the edges being labelled independently.
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}
+[
+scale = 1,
+level 1/.style={sibling distance=42mm, level distance = 1.2cm},
+level 2/.style={sibling distance=18mm, level distance = 1.5cm},
+level 3/.style={sibling distance = 8mm, level distance = 1cm},
+ellip/.style={text height = 4mm},
+game/.style={circle, draw, minimum size = .35cm, fill = none},
+whole/.style={draw=black, thick, inner sep = 12pt, text height = 0mm},
+sub/.style={dashed, draw=black, thick, inner sep=7pt}, % Style for grouping
+ssub/.style={draw = black, thick, inner sep =2pt},
+sssub/.style={dashed, draw = black, thick, inner sep = 3pt},
+arrow/.style={draw, ->, color = RoyalBlue, line width = 1.7pt},
+]
+
+% Draw the binary tree with an edge label
+\node[game] (root) {}
+	child {node[game](11) {}
+		child {node[game](21){}
+			child {node[ellip](31) {\bigdots}
+				}
+			child {node[ellip](32) {\bigdots}
+				}
+			}
+		child {node[game](22) {}
+			child {node[ellip](33) {\bigdots}
+				}
+			child {node[ellip](34) {\bigdots}
+				}
+			}
+	}
+	child {node[game](12) {}
+		child {node[game](23){}
+			child {node[ellip](35) {\bigdots}
+				}
+			child {node[ellip] (36){\bigdots}
+				}
+			}
+		child {node[game](24){}
+			child {node[ellip](37) {\bigdots}
+				}
+			child {node[ellip](38) {\bigdots}
+				}
+			}
+	};
+\node[whole, label=above:{$X_n$}, fit = (root)(31)(38)] {};
+\node[sub, label=above:{$Y_{n-1}$}, fit = (11)(21)(22)(31)(34)]{};
+\node[sub, label=above:{$Y_{n-1}$}, fit = (12)(23)(24)(35)(38)]{};
+\node[ssub, label = above:{$X_{n-2}$}, fit = (21)(31)(32)]{};
+\node[ssub, label = above:{$X_{n-2}$}, fit = (22)(33)(34)]{};
+\node[ssub, label = above:{$X_{n-2}$}, fit = (23)(35)(36)]{};
+\node[ssub, label = above:{$X_{n-2}$}, fit = (24)(37)(38)]{};
+\end{tikzpicture}
+\caption{The sub-events of $X_n$}
+\label{subgames}
+\end{figure}
+
+Thus, $X_2$ occurs if $e_1$ is labelled $A$ and Aaron \emph{wins the rest of the game after traversing $e_1$} ($Y_1$) or $e_2$ is labelled $A$ and Aaron \emph{wins the rest of the game after traversing $e_2$} ($Y_1$). That is,
+\begin{align*}
+P(X_2) &= P((A_{e_1} \cap Y_1) \cup (A_{e_2} \cap Y_1))\\
+&= P(A_{e_1} \cap Y_1) + P(A_{e_2} \cap Y_1) - P((A_{e_1} \cap Y_1) \cap (A_{e_2} \cap Y_1))\\
+&= 2pP(Y_1) - p^2P(Y_1)^2.
+\end{align*}
+Similarly,
+\begin{align*}
+P(Y_2) &= P((A_{e_1} \cap X_1) \cap (A_{e_2} \cap X_1))\\ 
+P(Y_2) &= p^2P(X_{1})^2.
+\end{align*}
+
+But wait a second. Was there anything stopping us just now from writing $X_n$ instead of $X_2$ and $Y_{n-1}$ instead of $Y_1$ or $Y_n$ instead of $Y_2$ and $X_{n-1}$ instead of $X_1$? Absolutely not! This means that
+\begin{gather}
+P(X_n) = 2pP(Y_{n-1}) - p^2P(Y_{n-1})^2\text{ and}\label{xn}\\
+P(Y_n) = p^2P(X_{n-1})^2.\label{yn}
+\end{gather}
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture} \begin{axis}[
+	colormap/cool,
+	xlabel=$x$,
+	ylabel=$p$,
+	zlabel = $z$,
+	zmin = -.15,
+	zmax = 1,
+    	title={$p^6x^4-2p^3x^2 + x$},
+	view = {235}{30},
+    	domain=0:1,
+	y domain =0:1
+]
+\addplot3 [surf,thick,samples=25] {y^6*x^4 - 2*y^3*x^2 + x};
+\end{axis}
+\end{tikzpicture}
+\caption{something}
+\end{figure}
+
+
+
+We now return to the infinite game. To answer question \ref{infimum}, we need to determine for which values of $p$ $P(X_\infty) > 0$. First, let's find $P(X_\infty)$. If we take the limit as $n$ approaches infinity in \eqref{xn} then substitute in the value of $P(Y_n)$ from \eqref{yn}, we get
+\begin{align*}
+P(X_\infty) &= 2pP(Y_{\infty-1}) - p^2P(Y_{\infty-1})^2\\
+&= 2p\Big(p^2P(X_{\infty-2})^2\Big) - p^2\Big(p^2P(X_{\infty-2})^2\Big)^2\\
+&= 2p^3P(X_{\infty-2})^2 - p^6P(X_{\infty-2})^4.
+\end{align*}
+$P(X_\infty) = P(X_{\infty-2})$, and we still don't know what $P(X_\infty)$ is, so let it be $x$. Then we have $x = 2p^3x^2 - p^6x^4$ or, after rearranging terms,
+\begin{equation*}
+x(p^6x^3 - 2p^3x + 1) = 0.
+\end{equation*}
+We ignore the trivial solution $x = 0$ and set our sights on $p^6x^3 - 2p^3x + 1 = 0$. Let's remind ourselves what this equation represents. The possible values of $x$ that satisfy this equation are the possible values of $P(X_\infty)$. This is why we ignored $x=0$; we already know that Aaron's probability of winning can be $0$ (set $p = 0$, for example). 
+
+The discriminant for a cubic polynomial of the form \[x^3 + ax^2 + bx + c\] is \[a^2b^2 + 18abc - 4b^3 - 4a^3c - 27c^2.\] Therefore
+\begin{align*}
+\Delta &= 0 + 0 -4b^3 - 0 - 27c^2\\
+&=-4(-2p^{-3})^3 - 27(p^{-6})^2\\
+&=2^5p^{-9} - 27p^{-12}.
+\end{align*}
+
+Setting $\Delta = 0$ and solving for $p$, we find that
+\begin{align*}
+2^5p&^{-9} = 27p^{-12}\\
+2^5p&^3 = 3^3\\
+p&^3 = 3^3\cdot 2^{-5}\\
+p& = 3\cdot 2^{\frac{-5}{3}},
+\end{align*}
+which is our final answer.
+
+
+
+
+
+
+
+
+
+\appendix
+\chapter{Answers to the Exercises}\label{answers}
+\begin{exercise*}[\ref{q:neg}]
+If $P(E) = p$, then $P(\neg E) = 1 - p$.
+\end{exercise*}
+
+
+\begin{exercise*}[\ref{q:cap}]
+When $E$ and $F$ are independent, finding $P(E \cap F)$ is straightforward because the sample space is simply the set of all pairs of possible outcomes from $E$ and $F$, i.e., $\Omega = \Omega_E \times \Omega_F$, where $\Omega_G$ is the sample space of an event $G$. As a result,
+\begin{equation*}
+P(E \cap F) = \frac{\#(E \cap F)}{|\Omega_E \times \Omega_F|}
+= \frac{\#(E) \cdot \#(F)}{|\Omega_E| \cdot |\Omega_F|}
+= P(E) \cdot P(F),
+\end{equation*} 
+where $\#(G)$ denotes the number of outcomes where event $G$ occurs (in its sample space). See Figure \ref{product} for an example.
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}
+[
+scale = 1.25,
+v/.style = {Apricot, line width = 9mm},
+h/.style = {Salmon, line width = 7mm},
+rect/.style = {very thick}
+]
+\foreach \i in {1, 2, 3, 4, 5}{
+	\foreach \j in {1, 2, 3, 4}{
+		\coordinate (hs\j) at (.5, \j);
+		\coordinate (he\j) at (5.35,\j);
+		\coordinate (vs\i) at (\i, .75);
+		\coordinate (ve\i) at (\i, 4.3);
+	}
+}
+\begin{scope}[blend mode=screen]
+\filldraw[v] (vs2) rectangle (ve2);
+\filldraw[v] (vs3) rectangle (ve3);
+\filldraw[v] (vs5) rectangle (ve5);
+\filldraw[h] (hs2) rectangle (he2);
+\filldraw[h] (hs4) rectangle (he4);
+\end{scope}
+\foreach \i in {1, 2, 3, 4, 5}{
+	\foreach \j in {1, 2, 3, 4}{
+		\coordinate (\i\j) at (\i, \j);
+		\node (n\i\j) at (\i\j) {(\i, \j)};
+		\coordinate (obl\i\j) at (\i -.375, \j -.275);
+		\coordinate (otr\i\j) at (\i + .375, \j + .275);
+	} 
+}
+\foreach \i in {1, 2, 3, 4, 5}{
+\node at (\i, 4.65) {\i};
+}
+\foreach \i in {1, 2, 3, 4}{
+\node at (.25, \i) {\i};
+}
+\draw[rect] (obl24) rectangle (otr24);
+\draw[rect] (obl54) rectangle (otr54);
+\draw[rect] (obl34) rectangle (otr34);
+\draw[rect] (obl22) rectangle (otr22);
+\draw[rect] (obl32) rectangle (otr32);
+\draw[rect] (obl52) rectangle (otr52);
+\end{tikzpicture}
+\caption{The elements of $\Omega_{D_5} \times \Omega_{D_4}$. Let $X$ be the event where $D_5$ is prime, and let $Y$ be the event where $D_4$ is even. The outcomes where $X \cap Y$ occurs are boxed, and we can verify that $P(X \cap Y) = 6/20$ matches $P(X) \cdot P(Y) = \frac{3}{5} \cdot \frac{2}{4}$.}
+\label{product}
+\end{figure}
+\end{exercise*}
+
+
+\begin{exercise*}[\ref{q:cup}]
+Venn diagram properties shown in Figure \ref{vennd} reveal that for any two events $E$ and $F$, \[P(E \cup F) = P(E) + P(F) - P(E \cap F).\]
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[scale = 1.15]
+    % Define colors for the sets
+    \begin{scope}[blend mode=overlay]
+        % Draw the first set (A)
+        \fill[Periwinkle] (-1,0) circle (1.5);
+        % Draw the second set (B)
+        \fill[Dandelion] (1,0) circle (1.5);
+    \end{scope}
+    
+    \node at (-1.15, .7) (4){{\large 4}};
+    \node at (-1.25, -.7) (6){{\large 6}};
+    \node at (0, 0) (2) {{\large 2}};
+    \node at (1.15, .7) (3){{\large 3}};
+    \node at (1.25, -.7) (5){{\large 5}};
+    \node at (-1,1.75) (E){{\large $E$}};
+    \node at (2.5, 1.5) (1){{\large 1}};
+    \node at (1,1.75) (F){{\large $F$}};
+    \node at (0,-1.75) (EandF){{\large $E \cap F$}};
+    \node at (0, -.7) (point){};
+    \node at (-2.75, 0) (leftbox){};
+    \node at (2.75, 0) (rightbox){};
+    
+    % Draw outlines for the sets
+    \draw[thick] (-1,0) circle (1.5) node(Ev) {}; % Set A
+    \draw[thick] (1,0) circle (1.5) node(Fv) {}; % Set B
+    \draw[->, dotted, thick] (EandF) -- (point);
+    \node[draw, inner sep = 3pt, very thick, fit = (Ev)(Fv)(EandF)(leftbox)(rightbox)(E)(F), label = above:{{\LARGE $\Omega$}}]{};
+\end{tikzpicture}
+\caption{A Venn diagram of two events in d6's sample space. $E$ is the event that the roll is even, and $F$ is the event that the roll is prime. So $P(E \cup F) = P(E) + P(F) - P(E \cap F) = 3/6 + 3/6 - 1/6 = 5/6$.}
+\label{vennd}
+\end{figure}
+\end{exercise*}
+
+\begin{exercise*}[{\ref{completesquare}}] We first notice that
+\[(x + h)^2 = x^2 + 2hx + h^2\] so \[\left(x + \frac{b}{2a}\right)^2 = x^2 + \frac{b}{a}x + \frac{b^2}{4a^2}.\] Then
+\begin{align*}
+ax^2 + bx + c &= 0\\
+x^2 + \frac{b}{a}x + \frac{c}{a} &= 0\\
+x^2 + \frac{b}{a}x + \frac{b^2}{4a^2} + \frac{c}{a} &= \frac{b^2}{4a^2}\\
+\left(x + \frac{b}{2a}\right)^2 + \frac{c}{a} &= \frac{b^2}{4a^2}\\
+\left(x + \frac{b}{2a}\right)^2 &= \frac{b^2-4ac}{4a^2}\\
+x + \frac{b}{2a} &= \pm\sqrt{\frac{b^2}{4a^2}}\\
+x &= \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}.
+\end{align*}
+\end{exercise*}
+
+\end{document}
