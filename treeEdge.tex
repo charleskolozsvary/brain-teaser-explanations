@@ -19,6 +19,7 @@
 \newtheorem*{definition*}{Definition}
 \newtheorem{exercise}{Exercise}[chapter]
 \newtheorem*{exercise*}{Answer}
+\newtheorem{answer}{Answer}[chapter]
 
 \newtheoremstyle{colonstylebf}{}{}{\normalfont}{}{\bfseries}{:}{.5em}{}
 \theoremstyle{colonstylebf}
@@ -58,65 +59,63 @@
 
 \chapter*{Preface}
 
-
-Each month, a quantitative trading firm called Jane Street shares a puzzle so abstract and
-complicated that you're left wondering who on earth could have come up with it.\footnote{Example: Consider 3-space partitioned into a grid of unit cubes. 
+A few years ago a friend of mine mentioned that a company called Jane Street posts fun and challenging puzzles.
+And he was right! December 2022's \emph{Die Agony} was the first of their puzzles that I solved, and I thoroughly enjoyed it. I continued solving puzzles and liked August 2024's \emph{Tree Edge Triage} so much that I typeset my solution for it in \LaTeX. After the writeup, though, I realized that
+I wouldn't be satisfied with an explanation that just I or my math nerd friends could understand and appreciate---it would be much more rewarding if I could show off this puzzle (and hopefully others) in a way that \emph{anyone} could understand and appreciate. That is a tall order, though, for sure, especially given how dense and math heavy Jane Street's puzzles can be.\footnote{Example: Consider 3-space partitioned into a grid of unit cubes. 
 Given a fixed positive real number $D$ and a random line segment of that length,
 what value $D$ maximizes the probability that the two endpoints of the
 segment lie in orthogonally adjacent unit cubes, and what is this maximal
-probability?} The answer: some nerd genius making way more money than you might think possible as someone whose job it is to solve puzzles like this
-every day.
-Putting aside whether you think a dense math problem like the one in the last FN really deserves to be called a puzzle,\footnote{(which it does)}
-its worth investigating how one might solve them.
-there's something worth investigating here, whether it's how a proprietary trading firm like Jane Street is so successful or
-how you'd go about solving these tricky problems.
+probability?}
 
-Maybe to the disappointment of a few, what follows will delve into the latter question, presenting
-solutions to a handful of Jane Street's puzzles.\footnote{For the time being, only a presentation of the August 2024 puzzle, \emph{Tree-edge Triage}, is included.}
-But we shouldn't despair: math has a lot going for it, at least in this author's opinion. It might be the most powerful, dynamic, and fascinating subject of all time.\footnote{To demonstrate this claim would be to teach all of mathematics, and no one has the time or skill to do this. But as the saying goes, ``don't let perfect be the enemy of good.'' We need to start somewhere, so we start here, now, with some puzzles.} However, like anything that's worth doing, math requires effort, for the experienced and uninitiated alike. The former\footnote{(those already versed in basic set and probability theory)} may wish to skip directly to Chapter \ref{statement}, and the latter needn't worry: The presentations are meant to be understood by anyone older than, say, fifteen.\footnote{This is not meant to make anyone feel discouraged, of course, if some ideas do not come easily; the intention of such a statement is rather that anyone (yes, anyone) can eventually understand what we're doing.}
+The hope is that Chapter \ref{prelim} will offer enough of an introduction to the basic but powerful (mathematical) ideas that are needed for solving these tricky puzzles. 
 
-By the end of this unorthodox tour of mathematics, we'll have gained a handful of tools that will help us reach even greater heights and depths of the subject. Or, at the very least, we'll have solved some interesting puzzles. And, if you're still reading, you probably agree, as Jane Street also says, that ``solving puzzles just feels great.''
+%% It is also my hope that by the end, dear reader, will gain an appreciation for the fun there is to be had in doing mathematics, or, at the very least, you will learn how to solve some tricky and cool puzzles.
+
+%% Each month, a quantitative trading firm called Jane Street shares a puzzle so abstract and
+%% complicated that you're left wondering who on earth could have come up with it.\footnote{Example: Consider 3-space partitioned into a grid of unit cubes. 
+%% Given a fixed positive real number $D$ and a random line segment of that length,
+%% what value $D$ maximizes the probability that the two endpoints of the
+%% segment lie in orthogonally adjacent unit cubes, and what is this maximal
+%% probability?} The answer: some nerd genius who makes way more money than you'd think possible as someone whose job it is to solve puzzles like this
+%% every day. Putting aside whether you think a dense math problem like the one in the last FN really deserves to be called a puzzle,\footnote{(which it does)}
+%% there's something worth investigating here, whether it's how a proprietary trading firm like Jane Street is so successful or
+%% how you'd go about solving these tricky problems.
+
+%% Maybe to the disappointment of a few, what follows will delve into the latter question, presenting
+%% solutions to a handful of Jane Street's puzzles.\footnote{For the time being, only a presentation of the August 2024 puzzle, \emph{Tree-edge Triage}, is included.}
+%% But we shouldn't really despair: math has a lot going for it, at least in my opinion. It might be the most powerful, dynamic, and fascinating subject of all time.\footnote{To demonstrate this claim would be to teach all of mathematics, and no one has the time or skill to do this. But as the saying goes, ``don't let perfect be the enemy of good.'' We need to start somewhere, so we start here, now, with some puzzles.} However, like anything that's worth doing, math requires effort, for the experienced and uninitiated alike. The former\footnote{(those already versed in basic set and probability theory)} may wish to skip directly to Chapter \ref{statement}, and the latter needn't worry: The presentations are meant to be understood by anyone older than, say, fifteen.\footnote{This is not meant to make anyone feel discouraged, of course, if some ideas do not come easily; the intention of such a statement is rather that anyone (yes, anyone) can eventually understand what we're doing.}
+
+%% By the end of this unorthodox tour of mathematics, we'll have gained a handful of tools that will help us reach even greater heights and depths of the subject. Or, at the very least, we'll have solved some interesting puzzles. And, if you're still reading, you probably agree, as Jane Street also says, that ``solving puzzles just feels great.''
 
 \newpage
 
 $\phantom{\scalebox{72}{A}}$
 
 \begin{flushright}
+%% \begin{quote}
+%% \emph{Ask, and it shall be given you; seek, and ye shall find; knock, and it shall be opened unto you} --- Matthew 7:7
+%% \end{quote}
 \begin{quote}
-\emph{Ask, and it shall be given you; seek, and ye shall find; knock, and it shall be opened unto you} --- Matthew 7:7
-\end{quote}
-\begin{quote}
-\emph{If you can't explain it to a six year old, you don't understand it yourself} --- Albert Einstein
+\emph{If you can't explain it to a six year old, you don't understand it yourself}---Albert Einstein
 \end{quote}
 \end{flushright}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%SECTION%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Preliminaries}\label{prelim}
-The ``royal we'' in the preface is in fact accurate: this section includes exercises, and you are actually expected to do them. But don't worry;\footnote{Be happy.} the exercises are short and simple and their solutions are in Appendix \ref{answers}.\footnote{A final word of advice: give each exercise an honest attempt before consulting its solution; you'll learn more this way, and you'll learn faster.} 
+Hey, a heads up: this section includes exercises, and it is expected that you do them. But don't worry;\footnote{Be happy.} the exercises are short and simple and their solutions are in Appendix \ref{answers}. Give each exercise an honest attempt before consulting its solution, though; you'll learn more this way, and you'll learn faster.
 
 %So go on---take heart, and leap into the world of mathematics where adventure, mystery, and beauty await!
 
-\section{The Beginning}
-\begin{quote}
-\emph{Natural numbers were created by God, everything else is the work of men} — Kronecker (1823–1891)
-\end{quote}
-You might not think about it like this, but the very first thing you learned in math was how to count --- e.g., there are three
-apples over here and two over there, and if we put them together, there are five apples.
-\footnote{
-\centerline{INTERPOLATION: THE THING, NOT IN ITSELF} People lead disparate lives, and there is an incomprehensible range of possible experience. So it should be no surprise that there are many schools of thought when it comes to putting (or, rather, attempting to put) slippery philosophical musings precisely. The  we investigate here is \emph{abstraction}. The Oxford English Dictionary (OED) says that   there exists a word called `abstraction' which plays a crucial role in mathematics and  It's worth appreciating, too, the following leap in meaning that is often taken for granted: there is something \emph{the same} about a pair of apples, rhinos, rocks, zooxanthellae, etc. That \emph{thing} is, in itself, `the number two', and to give it the respect and distinction it deserves, we refer to it with a symbol that should remind us that we're interacting with something unusual: `2' (the unusual thing being \emph{abstraction}).}
+\section{A half-start}
+%% \begin{quote}
+%% \emph{Natural numbers were created by God, everything else is the work of men} — Kronecker (1823–1891)
+%% \end{quote}
+You might not think about it like this, but the very first thing you learned in math was how to count---as in ``there are three
+apples over here and two over there, and if we put them together, there are five apples.'' The numbers involved in this basic form of counting are aptly called the \emph{natural numbers}. One is a natural number, and so is two and three and four and so on.\footnote{9001 is a natural number, too.}
 
-Existing in thought or as an idea but not having a physical or concrete existence
+But, as almost everyone already knows, these aren't the only numbers. Some numbers are \dots \emph{\ \!unnatural}, if history is any measure. Zero and negative numbers, for instance, were adopted well after the naturals. And it isn't too hard to imagine why: neither of them can be thought of in the same straight-forward, tangible way as a natural number (good luck pointing at zero or negative three apples). It is necessary to think about these numbers a little differently; we need to recognize that each is a unique leap in abstraction: zero represents the absence of a quantity rather than its multiplicity; and a negative number (in its most straight-forward light) represents a change (a \emph{reduction}) in number rather than a number outright.
 
-The numbers involved in this basic form of counting are aptly\footnote{(monists would disagree)} called the \emph{natural numbers}. One is a natural number, and so is two and three and four and so on.\footnote{9001 is a natural number, too.}
-
-But, as almost everyone already knows, these aren't the only numbers. Some numbers are \dots \emph{\ \!unnatural}, if history is any measure. Zero and negative numbers, for instance, were adopted well after the naturals. And it isn't too hard to imagine why: neither of them can be thought of in the same straight-forward, tangible way as a natural number --- good luck pointing at zero or negative three apples. We need to think about these numbers a little differently, i.e., we need to recognize that each is a unique leap in abstraction: zero represents the absence of a quantity rather than its precise multiplicity (as with the naturals); and a negative number represents a {\sl reduction} in number rather than a number outright.  
-
-You might think a noun like ``abstraction'' overcomplicates a simple idea like zero or a negative number. You'd be wrong, however, or there would only be at most a disagreement on definitions, not real, capital `M' Meaning. 
-
-
-
-And there are even more numbers! We notice that some things can be considered as parts of a whole rather than whole things themselves: you can have half of an apple, or a quarter, or three seventh's and so on. But the trickery here is assuming that any kind of whole exists that can be considered in parts as opposed to everything being 
-
+The history of now-familiar numbers is fascinating but not the focus of what follows, the bare minimum ideas for pondering the puzzles. The hope of this mini historical detour was to shed light on how even the simplest ideas are worth revisiting, that in doing so we might see them in a new light and gain a new appreciation for them. What follows is a good deal of ``basic'' math which I hope the experienced and uninitiated alike will consider and respect rather than skim or skip. As G.\ P\'olya puts it, ``the advanced reader who skips parts that appear too elementary may miss more than the less advanced reader who skips parts that appear too complex.''
 
 \section{Sets}
 A set is a collection of distinct items or ``elements.'' Sets are written by listing their elements inside curly braces and can be represented by variables. Here are some example sets:
@@ -138,17 +137,16 @@ For example, \[\set{1, 2} \times \set{a, b, c} = \set{(1, a), (1, b), (1, c), (2
 For finite $S$ and $T$, what is $|S \times T|$ in terms of $|S|$ and $|T|$?
 \end{exercise}
 
-The title of this subsection is a set that comes up a lot in mathematics. Putting aside rigor, the real numbers are those that can be written as an infinite string of digits, repeating or otherwise, such as $3.1415926\dots = \pi$ or $-0.0000000100003$. These numbers
+%% The title of this subsection is a set that comes up a lot in mathematics. Putting aside rigor, the real numbers are those that can be written as an infinite string of digits, repeating or otherwise, such as $3.1415926\dots = \pi$ or $-0.0000000100003$. These numbers
 
-This brief description misses some important and fascinating details that the curious reader might want to look into by searching ``transcendental vs. algebraic numbers.''
+%% This brief description misses some important and fascinating details that the curious reader might want to look into by searching ``transcendental vs. algebraic numbers.''
 
 \subsection{Bounds of sets}
 A set may have lower (or upper) bounds when its elements can be ordered. For example, consider the set $H = \set{0, 1, 2, 3}$. The number $-100$ is a lower bound of $H$ because it is less than or equal to every element of $H$. However, there are greater lower bounds, such as $-99$, $-98$, and so on.
 \begin{exercise}\label{lowerbound}
 What is the greatest lower bound of $H$? Why?
 \end{exercise}
-
-We call the greatest lower bound of a set its \textit{infimum}. The minimum of a set is similar, it is the element that is less than every other element. 
+We call the greatest lower bound of a set its \textit{infimum}. The minimum of a set is very similar: it is the least element \emph{contained} in a set.
 \begin{exercise}\label{reallower}
 Are the infimum and minimum of a set always the same? If they aren't, give an example.
 \end{exercise}
@@ -226,7 +224,7 @@ If an event is guaranteed to happen, its probability is 1. So for any event $E$,
 \begin{exercise}
 Why? \emph{Hint:} This is not a trick question.
 \end{exercise}
-For convenience, we can denote random events with variables. For example, let $D_n$ be the roll of a d$n$ (a standard $n$-sided die); then, again, $P(D_6 = 6) = 1/6$.
+For convenience, we can denote the outcome of random events with variables. For example, let $D_n$ be the roll of a d$n$ (a standard $n$-sided die); then, again, $P(D_6 = 6) = 1/6$.
 
 However, finding the probability of an event can be challenging when the context is unclear (e.g., what is the probability you think of the number $42$?). Therefore, it's helpful to keep in mind the set of all possible outcomes (relevant to an event), called the \emph{sample space} and denoted $\Omega$. For example, $\Omega = \set{1, 2, 3, 4, 5, 6}$ when rolling a d6: each number represents the outcome that the d6 rolls that value.
 
@@ -240,17 +238,14 @@ What is $P(D_6 \text{ is prime})$?\footnote{A prime number is only divisible by 
 
 If outcomes are not equally likely, we can modify the sample space by assigning each event a number of outcomes proportional to its likelihood. For instance, if we have a weighted d4 where each number $x$ comes up $(10\cdot x)\%$ of the time, this would be equivalent to a d10 with the number 1 on one face, 2 on two faces, and so on. 
 \begin{exercise}\label{magiccoin}
-Imagine two coins, each with sides labelled 1 and 2. One coin, $F$, is fair,\footnote{(meaning each outcome is equally likely)} while the other one, $M$, is half-magic: if $F = 1$, then $M = 1$; otherwise, $M$ is fair. You flip $F$, then $M$. Describe a weighted die whose outcomes match the random variable $F + M$. \textit{Hint}: apply equation \eqref{countprob} and the preceding paragraph.
+  Imagine two coins, each with sides labelled 1 and 2. One coin, $F$, is fair,\footnote{(meaning each outcome is equally likely)} while the other one, $M$, is half-magic: if $F = 1$, then $M = 1$; otherwise, $M$ is fair. You flip $F$, then $M$. Describe a weighted die whose outcomes match the random variable $F + M$.
+
+\noindent\emph{Hint}: apply equation \eqref{countprob} and the preceding paragraph.
 \end{exercise}
 
 
 \subsubsection*{Independence.}
-Two random events are \emph{independent} if neither gives information about the likelihood of the other. For example, the first roll of a d6 gives no information about its second roll, so the two rolls are independent, unlike $M$ and $F$ in Exercise \ref{magiccoin}. Independent events are almost always easier to reason about than non-independent (i.e., dependent) events.
-
-\begin{exercise}
-Why? \emph{Hint}: compare the probability that the 100th roll of a d6 is 6 with the probability that the 100th roll of a \emph{special} d6 (identical to a standard one, except if you ever roll more than 20 of a number, it is replaced by the number 1) is 6.
-\end{exercise}
-
+Two random events are \emph{independent} if neither gives information about the likelihood of the other. For example, the first roll of a d6 gives no information about its second roll, so the two rolls are independent, unlike $M$ and $F$ in Exercise \ref{magiccoin}. Independent events are almost always easier to reason about than non-independent (i.e., dependent) events.\footnote{Compare the probability that the 100th roll of a d6 is 6 with the probability that the 100th roll of a \emph{special} d6 (identical to a standard one, except if you ever roll more than 20 of a number, it is replaced by the number 1) is 6.}
 
 \subsubsection*{Multiple events.}
 Events are usually composed of subevents. There are three fundamental operations that create new events from existing ones.
@@ -279,10 +274,10 @@ A polynomial is an expression made up of indeterminants where the only operation
 The degree of a polynomial is the highest power of any indeterminant. For example, $x^3 - 7x + y$ has degree 3. A polynomial is called quadratic if its degree is 2.
 
 \subsubsection*{Zeros and quadratic polynomials.}
-The zeros of a polynomial are, unsurprisingly, the values of the variable(s) that make the polynomial equal to zero. For example, the zeros of $x^2 - 5x + 6$ are $x = 3$ and $x = 2$. Finding the zeros of a linear (degree 1) polynomial is trivial, but less so for a quadratic.
+The zeros of a polynomial are, unsurprisingly, the values of the variable(s) that make the polynomial equal to zero. For example, the zeros of $x^2 - 5x + 6 = (x-3)(x-2)$ are $x = 3$ and $x = 2$. Finding the zeros of a linear (degree 1) polynomial is trivial, but less so for a quadratic.
 
 \begin{exercise}\label{completesquare}
-Find a formula for the zeros of a quadratic $p(x) = ax^2 + bx + c$ in terms of its coefficients, $a$, $b$, and $c$.\footnote{The coefficients $a$, $b$, and $c$ are not to be confused with indeterminants: they represent only one possible value, unlike indeterminants that represent several possible values. In the earlier polynomial, $a = 1$, $b = -5$ and $c = 6$.} \emph{Hint}: Can you turn $p(x)$ into a form that looks like $(x + d)^2 = e$?\footnote{$d$ and $e$ are not indeterminants; they are particular values, like $a$, $b$, and $c$.}
+Find a formula for the zeros of a quadratic $p(x) = ax^2 + bx + c$ in terms of its coefficients, $a$, $b$, and $c$.\footnote{The coefficients $a$, $b$, and $c$ are not to be confused with indeterminants: they represent only one possible value, unlike indeterminants that represent several possible values. In the earlier polynomial, $a = 1$, $b = -5$ and $c = 6$.} \emph{Hint}: Can you turn $p(x)$ into a form that looks like $(x + d)^2 = e$?\footnote{$d$ and $e$ are not indeterminants; they are particular values, known as \emph{constants}  (like $a$, $b$, and $c$).}
 \end{exercise}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%SECTION%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -527,15 +522,57 @@ which is our final answer.
 
 
 
-
-
-
-
 \appendix
 \chapter{Answers to the Exercises}\label{answers}
-\begin{exercise*}[\ref{q:neg}]
+\renewcommand{\thechapter}{\arabic{chapter}}
+\begin{answer}
 If $P(E) = p$, then $P(\neg E) = 1 - p$.
-\end{exercise*}
+\end{answer}
+
+\begin{answer}%two
+  Answer two.
+\end{answer}
+
+\begin{answer}%three
+  Answer three.
+\end{answer}
+
+\begin{answer}%four
+  Answer four.
+\end{answer}
+
+\begin{answer}%five
+  Answer five.
+\end{answer}
+
+\begin{answer}%six
+  Answer six.
+\end{answer}
+
+\begin{answer}%seven
+  Answer seven.
+\end{answer}
+
+\begin{answer}%eight
+  Answer eight.
+\end{answer}
+
+\begin{answer}%nine
+  Answer nine.
+\end{answer}
+
+\begin{answer}%ten
+  Answer ten.
+\end{answer}
+
+\begin{answer}%eleven
+  Answer eleven.
+\end{answer}
+
+\begin{answer}%twelve
+  Answer twelve.
+\end{answer}
+
 
 
 \begin{exercise*}[\ref{q:cap}]
