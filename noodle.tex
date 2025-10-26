@@ -1,0 +1,93 @@
+\documentclass{book}
+\input{preamble}
+\begin{document}
+\chapter{Connecting Noodles}
+There are $n$ noodles in a bowl. Two noodle ends are chosen uniformly at random (from all available ends)
+and connected until none are left.
+
+\begin{question*}
+  How many loops form on average, and
+  what is the probability that all the noodles connect to form one large loop? Can you find closed formulas for these expressions?
+  \end{question*}
+
+\section{Solution}
+Each time we connect two noodle ends either a loop forms or it doesn't (and we make a longer noodle). In either case, two ends are removed,
+so the effective number of noodles decreases by one. Therefore, with $n$ starting noodles, two ends will be connected exactly $n$ times, selecting
+from the ends of $n$, $n-1$, $n-2$, etc. noodles each time.
+
+We can find the probability a loop forms when there are $k$ noodles, $P(L_k)$, a few ways. The simplest is to notice that there are $2k-1$ available ends after the first is chosen, and that there's only one second end which will form a loop---the other end of
+the first end's noodle---so $P(L_k)=\frac{1}{2k-1}$.
+
+Alternatively, we can see that exactly $k$ out of the $\binom{2k}{2}$ possible noodle-end connections form a loop, so
+\begin{equation}\label{plk}
+P(L_k)=\frac{k}{\binom{2k}{2}} = \frac{k}{\frac{2k!}{2!(2k-2)!}} = \frac{k}{\frac{2k(2k-1)}{2}} = \frac{1}{2k-1}.
+\end{equation}
+
+Figure \ref{fig1} provides a visualization of noodle-end connections for $k\in\{2,4\}$.
+
+\begin{figure}[h]
+  \centering
+\drawDiagram{1}
+\drawDiagram{3}
+\caption{Diagrams of all connections between two (left) and four (right) noodles. The gray doubled lines are the noodles, filled-in black circles
+  are noodle ends, doubled lines are connections that form a loop, and dotted lines are connections that don't form loop. Knowing $\binom{8}{2} = 28$ and counting the doubled lines in the right diagram, we see that $P(L_4)=\sfrac{4}{28}=\sfrac{1}{7}$. We can also see more plainly from the left diagram that $P(L_2)=\sfrac{2}{6}=\sfrac{1}{3}$.
+}
+\label{fig1}
+\end{figure}
+
+\subsection*{Expected number of loops}
+Let $X$ be the number of loops that form. Then $X = \sum_{k=1}^{n} L_k$, where
+\begin{equation*}
+L_k = \begin{cases}
+  1 &\text{if a loop forms when there are $k$ noodles}\\
+  0 &\text{otherwise}.
+  \end{cases}
+\end{equation*}
+The average number of loops is of course $\expectation{X}$, and since $\expectation{X + Y} = \expectation{X}+\expectation{Y}$ (for all random variables) and
+$\expectation{L_k} = P(L_k)$,
+\[
+\expectation{\sum_{k=1}^n L_k} = \sum_{k=1}^n \expectation{L_k} = \sum_{k=1}^n \frac{1}{2k-1} \sim \frac{1}{2}\ln n.
+\]
+
+\subsection*{Probability that one large loop forms}
+The only way one large loop forms is if each time two
+ends are connected\footnote{(Other than when there is only one noodle.)} a loop \textit{doesn't} form.
+
+The probability a loop doesn't form when there are $k$ noodles is just
+\[
+1-P(L_k)=1-\frac{1}{2k-1}=\frac{2k-2}{2k-1},
+\]
+and since the selections
+of noodle ends are independent, the probability that $L_n = 0$ and $L_{n-1} = 0$ and $L_{n-2} = 0$ and so on is just
+\[
+\prod_{k=2}^{n}\frac{2k-2}{2k-1} = \prod_{i=1}^{n-1}\frac{2i}{2i+1}.
+\]
+
+\subsection*{Finding a closed formula}
+We've found the desired probability, but we'll go on to find a closed expression for it, starting with the numerator. By factoring out $2^{n-1}$ we get
+\begin{equation}\label{numerator}
+\prod_{i=1}^{n-1}2i = 2^{n-1}(n-1)!,
+\end{equation}
+which we can use to rewrite the denominator:
+\begin{align*}
+  \prod_{i=1}^{n-1}2i+1 
+  &= 1\cdot3\cdot5\cdot\cdots\cdot(2n-1)
+  = \frac{1\cdot2\cdot3\cdot\cdots\cdot(2n-2)}{2\cdot4\cdot6\cdot\cdots\cdot(2n-2)}\\
+  &= \frac{(2n-2)!}{\prod_{i=1}^{n-1}2i}
+  = \frac{(2n-2)!}{2^{n-1}(n-1)!} && \text{from \eqref{numerator}.}
+\end{align*}
+
+Substituting back in the rewritten numerator and denominator, we have the closed formula:
+\[
+\frac{(2^{n-1}(n-1)!)^2}{(2n-2)!}.
+\]
+
+\newpage
+\subsection*{For fun}
+Behold: Figure \ref{big}.
+\begin{figure}[H]
+  \centering
+  \resizebox{!}{450pt}{\drawDiagram{15}}
+  \caption{A diagram of all connections between $16$ noodles.}\label{big}
+  \end{figure}
+\end{document}

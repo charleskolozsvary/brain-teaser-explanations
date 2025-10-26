@@ -6,14 +6,14 @@ Aaron and Beren are playing a game that takes place within an infinite binary tr
 
 \begin{figure}[ht]
 \centering
-\input{tikz/example-game.tikz}
+\input{tikz/example-game}
 \caption{An example game: Aaron chooses to go left to avoid immediate defeat. However, after Beren goes right, Aaron is forced to choose one of two $B$-edges, and Beren wins.}
 \label{exGame}
 \end{figure}
 
-\begin{question*}\label{infimum}
+\begin{question}\label{infimum}
 What is the infimum of the set of probabilities $p$ for which Aaron has a nonzero probability of winning the game?
-\end{question*}
+\end{question}
 This question is kind of dense for the sake of rigor that isn't that important right now. So here's another way to put it: what is the smallest average proportion of edges in the tree labelled $A$ such that Aaron still has a chance of winning?
 
 \section{Solution}\label{solution}
@@ -34,7 +34,7 @@ Similarly, $Y_1$ occurs when both edges from the root are labelled $A$ (otherwis
 Why stop with $P(X_1)$ and $P(Y_1)$? Let's try to find $P(X_2)$. We could apply the same reasoning that got us $P(X_1)$, noting that $X_2$ occurs when either $e_1$ and its subsequent edges are labelled $A$ or $e_2$ and its subsequent edges are labelled A. But this approach becomes unwieldy as we consider more and more rounds. It would be nice if we could express $P(X_2)$ using what we already found---namely, $P(X_1)$ and $P(Y_1)$. And indeed, we can! The key is to realize that our events are composed of identical sub-events (see Figure \ref{subgames}), thanks to all the edges being labelled independently.
 \begin{figure}[ht]
 \centering
-\input{tikz/sub-events.tikz}
+\input{tikz/sub-events}
 \caption{The sub-events of $X_n$}
 \label{subgames}
 \end{figure}
@@ -77,7 +77,7 @@ P(Y_n) = p^2P(X_{n-1})^2.\label{yn}
 \caption{something}
 \end{figure}
 
-We now return to the infinite game. To answer question \ref{infimum}, we need to determine for which values of $p$ $P(X_\infty) > 0$. First, let's find $P(X_\infty)$. If we take the limit as $n$ approaches infinity in \eqref{xn} then substitute in the value of $P(Y_n)$ from \eqref{yn}, we get
+We now return to the infinite game. To answer Question \ref{infimum}, we need to determine for which values of $p$ $P(X_\infty) > 0$. First, let's find $P(X_\infty)$. If we take the limit as $n$ approaches infinity in \eqref{xn} then substitute in the value of $P(Y_n)$ from \eqref{yn}, we get
 \begin{align*}
 P(X_\infty) &= 2pP(Y_{\infty-1}) - p^2P(Y_{\infty-1})^2\\
 &= 2p\Big(p^2P(X_{\infty-2})^2\Big) - p^2\Big(p^2P(X_{\infty-2})^2\Big)^2\\

@@ -147,12 +147,6 @@ GetOptions("class=s"     => \$OPT{class},
 
 usage unless @ARGV == 1;
 
-# if (-e $OPT{outname}){
-#     print "\nFile $OPT{outname} already exists, overwrite it? (yes/no)\n";
-#     my $answer = <STDIN>;
-#     die "Aborting $program_name" if !($answer =~ m{^yes\n$}i);
-# }
-
 if (! -e $OPT{preamble}){
     die "File '$OPT{preamble}' does not exist. Aborting $program_name\n";
 }

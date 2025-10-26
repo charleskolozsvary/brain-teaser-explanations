@@ -1,3 +1,4 @@
+\usepackage{graphicx}
 \usepackage{amsthm}
 \usepackage{amssymb}
 \usepackage{appendix}
@@ -11,6 +12,8 @@
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
 
+\usepackage{xfrac}
+\usepackage{float}
 \usepackage{hyperref}
 
 \theoremstyle{definition}
@@ -43,3 +46,87 @@
   {1em}
   {}
   []
+
+
+%% for noodle.tex (pretty gross, but...)
+\gdef\true{1}
+\gdef\false{0}
+
+\gdef\drawPair#1#2#3#4#5{% 
+\expandafter\ifx\csname#1#2#3#4\endcsname\true\else%
+\expandafter\ifx\csname#3#4#1#2\endcsname\true\else%
+\edef\first{#1#2}%
+\edef\second{#3#4}%
+\ifx\first\second\else
+\draw[#5] (#1,#2) to (#3,#4);% 
+\global\expandafter\let\csname#1#2#3#4\endcsname\true%
+\global\expandafter\let\csname#3#4#1#2\endcsname\true%
+\fi\fi\fi}
+
+\gdef\drawDiagram#1{\begin{tikzpicture}
+  \def\n{#1}
+  \pgfmathparse{\n/2}
+  \xdef\midpoint{\pgfmathresult}
+  \foreach \y in {0,...,\n}{
+    \foreach \x in {-1,1}{
+      \foreach \j in {0,...,\n}{
+        \foreach \i in {-1,1}{
+          \expandafter\gdef\csname\x\y\i\j\endcsname{0}
+          \expandafter\gdef\csname\i\j\x\y\endcsname{0}          
+        }
+      }
+    }
+  }
+  \foreach \y in {0,...,\n}{
+    \draw[double,gray!50] (-1,\y) -- (1,\y);
+  }
+
+  \foreach \y in {0,...,\n}{
+    \foreach \x in {-1,1}{
+      \foreach \j in {0,...,\n}{
+        \foreach \i in {-1,1}{
+          \pgfmathparse{\x == -1 && \i == -1}
+          \edef\onLeft{\pgfmathresult}
+          \pgfmathparse{((\y > \midpoint) && (\j > \midpoint)) && (\y == \j)}
+          \edef\aboveAndAcross{\pgfmathresult}
+          \pgfmathparse{\onLeft || \aboveAndAcross}
+          \edef\bendLeft{\pgfmathresult}%
+          %
+          \pgfmathparse{\y==\j}
+          \edef\across{\pgfmathresult}
+          %
+          \pgfmathparse{\y!=\j && \x == -\i}
+          \edef\straight{\pgfmathresult}%
+          %
+          \ifx\straight\true%
+          \drawPair\x\y\i\j{densely dotted}
+          \else%
+          \ifx\bendLeft\true%
+              \ifx\across\true
+                  \drawPair\x\y\i\j{bend left, double}%
+              \else%
+                  \drawPair\x\y\i\j{bend left,densely dotted}%
+              \fi
+          \else%
+              \ifx\across\true
+                  \drawPair\x\y\i\j{bend right, double}
+              \else
+                  \drawPair\x\y\i\j{bend right,densely dotted}
+              \fi
+          \fi\fi
+        }
+      }
+    }
+  }
+  \foreach \y in {0,...,\n}{
+    \foreach \x in {-1,1}{
+      \filldraw (\x,\y) circle (.05);
+      %% \draw[double] (\x,\y) circle (.04);      
+    }
+  }
+\end{tikzpicture}}
+
+\newcommand{\expectation}[1]{\mathbb{E}\left[#1\right]}
+\let\ocdot\cdot
+\newcommand{\newcdot}{\mathop{\ocdot}}
+\let\cdot\newcdot

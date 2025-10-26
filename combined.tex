@@ -2,7 +2,7 @@
 \input{preamble.tex}
 \begin{document}
 % START OF FILE 'title.tex'
-\title{{\centering\Huge\textsc{Puzzle Presentations}}}
+\title{{\centering\Huge\textsc{Assorted Puzzle Solutions}}}
 \author{\Large Charles Kolozsvary}
 \date{}
 
@@ -17,7 +17,7 @@
 \chapter*{Preface}
 I heard from a friend in December 2022 that a company called Jane Street posts a ``puzzle'' each month. But they aren't typical puzzles (like jig-saws or crosswords), they are usually, rather, math-heavy brain teasers. For instance, the December 2022 puzzle, \emph{Die Agony}, goes as follows:
 \[
-\input{tikz/die-agony-grid.tikz}
+\input{tikz/die-agony-grid}
 \]
 \begin{quote}
 A six-sided die, with numbers written on each of its faces, is placed on the 6-by-6 grid above, in the lower-left (yellow) corner. It then makes a sequence of ``moves''. Each move consists of tipping the die into an orthogonally adjacent square within the grid.
@@ -92,7 +92,7 @@ Figure \ref{tree}: the circles are called nodes, and the lines connecting them a
 
 \begin{figure}[ht]
 \centering
-\input{tikz/example-binary-tree.tikz}
+\input{tikz/example-binary-tree}
 \caption{An example binary tree.}
 \label{tree}
 \end{figure}
@@ -168,14 +168,14 @@ Aaron and Beren are playing a game that takes place within an infinite binary tr
 
 \begin{figure}[ht]
 \centering
-\input{tikz/example-game.tikz}
+\input{tikz/example-game}
 \caption{An example game: Aaron chooses to go left to avoid immediate defeat. However, after Beren goes right, Aaron is forced to choose one of two $B$-edges, and Beren wins.}
 \label{exGame}
 \end{figure}
 
-\begin{question*}\label{infimum}
+\begin{question}\label{infimum}
 What is the infimum of the set of probabilities $p$ for which Aaron has a nonzero probability of winning the game?
-\end{question*}
+\end{question}
 This question is kind of dense for the sake of rigor that isn't that important right now. So here's another way to put it: what is the smallest average proportion of edges in the tree labelled $A$ such that Aaron still has a chance of winning?
 
 \section{Solution}\label{solution}
@@ -196,7 +196,7 @@ Similarly, $Y_1$ occurs when both edges from the root are labelled $A$ (otherwis
 Why stop with $P(X_1)$ and $P(Y_1)$? Let's try to find $P(X_2)$. We could apply the same reasoning that got us $P(X_1)$, noting that $X_2$ occurs when either $e_1$ and its subsequent edges are labelled $A$ or $e_2$ and its subsequent edges are labelled A. But this approach becomes unwieldy as we consider more and more rounds. It would be nice if we could express $P(X_2)$ using what we already found---namely, $P(X_1)$ and $P(Y_1)$. And indeed, we can! The key is to realize that our events are composed of identical sub-events (see Figure \ref{subgames}), thanks to all the edges being labelled independently.
 \begin{figure}[ht]
 \centering
-\input{tikz/sub-events.tikz}
+\input{tikz/sub-events}
 \caption{The sub-events of $X_n$}
 \label{subgames}
 \end{figure}
@@ -239,7 +239,7 @@ P(Y_n) = p^2P(X_{n-1})^2.\label{yn}
 \caption{something}
 \end{figure}
 
-We now return to the infinite game. To answer question \ref{infimum}, we need to determine for which values of $p$ $P(X_\infty) > 0$. First, let's find $P(X_\infty)$. If we take the limit as $n$ approaches infinity in \eqref{xn} then substitute in the value of $P(Y_n)$ from \eqref{yn}, we get
+We now return to the infinite game. To answer Question \ref{infimum}, we need to determine for which values of $p$ $P(X_\infty) > 0$. First, let's find $P(X_\infty)$. If we take the limit as $n$ approaches infinity in \eqref{xn} then substitute in the value of $P(Y_n)$ from \eqref{yn}, we get
 \begin{align*}
 P(X_\infty) &= 2pP(Y_{\infty-1}) - p^2P(Y_{\infty-1})^2\\
 &= 2p\Big(p^2P(X_{\infty-2})^2\Big) - p^2\Big(p^2P(X_{\infty-2})^2\Big)^2\\
@@ -267,6 +267,97 @@ p& = 3\cdot 2^{\frac{-5}{3}},
 \end{align*}
 which is our final answer.
 % END OF FILE 'tree-edge-triage.tex'
+% START OF FILE 'noodle.tex'
+\chapter{Connecting Noodles}
+There are $n$ noodles in a bowl. Two noodle ends are chosen uniformly at random (from all available ends)
+and connected until none are left.
+
+\begin{question*}
+  How many loops form on average, and
+  what is the probability that all the noodles connect to form one large loop? Can you find closed formulas for these expressions?
+  \end{question*}
+
+\section{Solution}
+Each time we connect two noodle ends either a loop forms or it doesn't (and we make a longer noodle). In either case, two ends are removed,
+so the effective number of noodles decreases by one. Therefore, with $n$ starting noodles, two ends will be connected exactly $n$ times, selecting
+from the ends of $n$, $n-1$, $n-2$, etc. noodles each time.
+
+We can find the probability a loop forms when there are $k$ noodles, $P(L_k)$, a few ways. The simplest is to notice that there are $2k-1$ available ends after the first is chosen, and that there's only one second end which will form a loop---the other end of
+the first end's noodle---so $P(L_k)=\frac{1}{2k-1}$.
+
+Alternatively, we can see that exactly $k$ out of the $\binom{2k}{2}$ possible noodle-end connections form a loop, so
+\begin{equation}\label{plk}
+P(L_k)=\frac{k}{\binom{2k}{2}} = \frac{k}{\frac{2k!}{2!(2k-2)!}} = \frac{k}{\frac{2k(2k-1)}{2}} = \frac{1}{2k-1}.
+\end{equation}
+
+Figure \ref{fig1} provides a visualization of noodle-end connections for $k\in\{2,4\}$.
+
+\begin{figure}[h]
+  \centering
+\drawDiagram{1}
+\drawDiagram{3}
+\caption{Diagrams of all connections between two (left) and four (right) noodles. The gray doubled lines are the noodles, filled-in black circles
+  are noodle ends, doubled lines are connections that form a loop, and dotted lines are connections that don't form loop. Knowing $\binom{8}{2} = 28$ and counting the doubled lines in the right diagram, we see that $P(L_4)=\sfrac{4}{28}=\sfrac{1}{7}$. We can also see more plainly from the left diagram that $P(L_2)=\sfrac{2}{6}=\sfrac{1}{3}$.
+}
+\label{fig1}
+\end{figure}
+
+\subsection*{Expected number of loops}
+Let $X$ be the number of loops that form. Then $X = \sum_{k=1}^{n} L_k$, where
+\begin{equation*}
+L_k = \begin{cases}
+  1 &\text{if a loop forms when there are $k$ noodles}\\
+  0 &\text{otherwise}.
+  \end{cases}
+\end{equation*}
+The average number of loops is of course $\expectation{X}$, and since $\expectation{X + Y} = \expectation{X}+\expectation{Y}$ (for all random variables) and
+$\expectation{L_k} = P(L_k)$,
+\[
+\expectation{\sum_{k=1}^n L_k} = \sum_{k=1}^n \expectation{L_k} = \sum_{k=1}^n \frac{1}{2k-1} \sim \frac{1}{2}\ln n.
+\]
+
+\subsection*{Probability that one large loop forms}
+The only way one large loop forms is if each time two
+ends are connected\footnote{(Other than when there is only one noodle.)} a loop \textit{doesn't} form.
+
+The probability a loop doesn't form when there are $k$ noodles is just
+\[
+1-P(L_k)=1-\frac{1}{2k-1}=\frac{2k-2}{2k-1},
+\]
+and since the selections
+of noodle ends are independent, the probability that $L_n = 0$ and $L_{n-1} = 0$ and $L_{n-2} = 0$ and so on is just
+\[
+\prod_{k=2}^{n}\frac{2k-2}{2k-1} = \prod_{i=1}^{n-1}\frac{2i}{2i+1}.
+\]
+
+\subsection*{Finding a closed formula}
+We've found the desired probability, but we'll go on to find a closed expression for it, starting with the numerator. By factoring out $2^{n-1}$ we get
+\begin{equation}\label{numerator}
+\prod_{i=1}^{n-1}2i = 2^{n-1}(n-1)!,
+\end{equation}
+which we can use to rewrite the denominator:
+\begin{align*}
+  \prod_{i=1}^{n-1}2i+1 
+  &= 1\cdot3\cdot5\cdot\cdots\cdot(2n-1)
+  = \frac{1\cdot2\cdot3\cdot\cdots\cdot(2n-2)}{2\cdot4\cdot6\cdot\cdots\cdot(2n-2)}\\
+  &= \frac{(2n-2)!}{\prod_{i=1}^{n-1}2i}
+  = \frac{(2n-2)!}{2^{n-1}(n-1)!} && \text{from \eqref{numerator}.}
+\end{align*}
+
+Substituting back in the rewritten numerator and denominator, we have the closed formula:
+\[
+\frac{(2^{n-1}(n-1)!)^2}{(2n-2)!}.
+\]
+
+\newpage
+\subsection*{For fun}
+Behold: Figure \ref{big}.
+\begin{figure}[H]
+  \centering
+  \resizebox{!}{450pt}{\drawDiagram{15}}
+  \caption{A diagram of all connections between $16$ noodles.}\label{big}
+  \end{figure}
+% END OF FILE 'noodle.tex'
 % START OF FILE 'answers.tex'
 \allowdisplaybreaks
 
@@ -337,7 +428,7 @@ where $\#(G)$ denotes the number of outcomes where event $G$ occurs (in its samp
 
 \begin{figure}[ht]
 \centering
-\input{tikz/d5timesd4.tikz}
+\input{tikz/d5timesd4}
 \caption{The elements of $\Omega_{D_5} \times \Omega_{D_4}$. Let $X$ be the event where $D_5$ is prime, and let $Y$ be the event where $D_4$ is even. The outcomes where $X \cap Y$ occurs are boxed, and we can verify that $P(X \cap Y) = 6/20$ matches $P(X) \cdot P(Y) = \frac{3}{5} \cdot \frac{2}{4}$.}
 \label{product}
 \end{figure}
@@ -349,7 +440,7 @@ Venn diagram properties shown in Figure \ref{vennd} reveal that for any two even
 
 \begin{figure}[ht]
 \centering
-\input{tikz/venndiagram.tikz}
+\input{tikz/venndiagram}
 \caption{A Venn diagram of two events in d6's sample space. $E$ is the event that the roll is even, and $F$ is the event that the roll is prime. So $P(E \cup F) = P(E) + P(F) - P(E \cap F) = 3/6 + 3/6 - 1/6 = 5/6$.}
 \label{vennd}
 \end{figure}
