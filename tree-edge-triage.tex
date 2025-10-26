@@ -6,85 +6,7 @@ Aaron and Beren are playing a game that takes place within an infinite binary tr
 
 \begin{figure}[ht]
 \centering
-\begin{tikzpicture}
-[
-    scale = 1.1,
-    level 1/.style={sibling distance=42mm, level distance = 1.2cm},
-    level 2/.style={sibling distance=22mm, level distance = 2.1cm},
-    level 3/.style={sibling distance = 10mm, level distance = 1cm},
-    level 4/.style={sibling distance = 5mm, level distance = .9cm},
-    ellip/.style={text height = 4mm},
-    game/.style={circle, draw, minimum size = .35cm, fill = none},
-    whole/.style={draw=black, very thick, inner sep = 25pt, text height = 0mm},
-    sub/.style={dashed, draw=black, very thick, inner sep=15pt}, % Style for grouping
-    ssub/.style={draw = black, very thick, inner sep = 3pt},
-    arrow/.style={draw, ->, color = RoyalBlue, line width = 1.7pt},
-]
-
-% Draw the binary tree with an edge label
-\node[game] (root) {}
-	child {node[game](11) {}
-		child {node[game] {}
-			child {node[game] {}
-				child {node[ellip] {\bigdots}}
-				child {node[ellip] {\bigdots}}
-			edge from parent node [left] {$A$}
-				}
-			child {node[game] {}
-				child {node[ellip] {\bigdots}}
-				child {node[ellip] {\bigdots}}
-			edge from parent node [right] {$B$}
-				}
-	edge from parent node [left] {$A$}
-			}
-		child {node[game](22) {}
-			child {node[game] {}
-				child {node[ellip] {\bigdots}}
-				child {node[ellip] {\bigdots}}
-			edge from parent node [left] {$B$}
-				}
-			child {node[game](34) {}
-				child {node[ellip] {\bigdots}}
-				child {node[ellip] {\bigdots}}
-			edge from parent node [right] {$B$}
-				}
-		edge from parent node [right] {$A$}
-			}
-	edge from parent node [above] {$A$}
-	}
-	child {node[game] {}
-		child {node[game] {}
-			child {node[game] {}
-				child {node[ellip] {\bigdots}}
-				child {node[ellip] {\bigdots}}
-			edge from parent node [left] {$B$}
-				}
-			child {node[game] {}
-				child {node[ellip] {\bigdots}}
-				child {node[ellip] {\bigdots}}
-			edge from parent node [right] {$A$}
-				}
-		edge from parent node [left] {$B$}
-			}
-		child {node[game] {}
-			child {node[game] {}
-				child {node[ellip] {\bigdots}}
-				child {node[ellip] {\bigdots}}
-			edge from parent node [left] {$B$}
-				}
-			child {node[game](s) {}
-				child {node[ellip] {\bigdots}}
-				child {node[ellip] {\bigdots}}
-			edge from parent node [right] {$A$}
-				}
-		edge from parent node [right] {$A$}
-			}
-	edge from parent node [above] {$B$}
-	};
-	\draw[arrow] (root) -- (11);
-	\draw[arrow] (11) -- (22);
-	\draw[arrow] (22) -- (34);
-\end{tikzpicture}
+\input{tikz/example-game.tikz}
 \caption{An example game: Aaron chooses to go left to avoid immediate defeat. However, after Beren goes right, Aaron is forced to choose one of two $B$-edges, and Beren wins.}
 \label{exGame}
 \end{figure}
@@ -94,8 +16,7 @@ What is the infimum of the set of probabilities $p$ for which Aaron has a nonzer
 \end{question*}
 This question is kind of dense for the sake of rigor that isn't that important right now. So here's another way to put it: what is the smallest average proportion of edges in the tree labelled $A$ such that Aaron still has a chance of winning?
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%SECTION%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Solution}\label{solution}
+\section{Solution}\label{solution}
 Rather than tackling the entire infinite problem right away (which could be overwhelming), we first consider finite games restricted to finite binary trees. For these games we define the following events:
 \begin{itemize}
 \item Let $X_n$ denote Aaron wins a game that starts on \textbf{his} turn and lasts $n$ rounds.
@@ -113,59 +34,7 @@ Similarly, $Y_1$ occurs when both edges from the root are labelled $A$ (otherwis
 Why stop with $P(X_1)$ and $P(Y_1)$? Let's try to find $P(X_2)$. We could apply the same reasoning that got us $P(X_1)$, noting that $X_2$ occurs when either $e_1$ and its subsequent edges are labelled $A$ or $e_2$ and its subsequent edges are labelled A. But this approach becomes unwieldy as we consider more and more rounds. It would be nice if we could express $P(X_2)$ using what we already found---namely, $P(X_1)$ and $P(Y_1)$. And indeed, we can! The key is to realize that our events are composed of identical sub-events (see Figure \ref{subgames}), thanks to all the edges being labelled independently.
 \begin{figure}[ht]
 \centering
-\begin{tikzpicture}
-[
-scale = 1,
-level 1/.style={sibling distance=42mm, level distance = 1.2cm},
-level 2/.style={sibling distance=18mm, level distance = 1.5cm},
-level 3/.style={sibling distance = 8mm, level distance = 1cm},
-ellip/.style={text height = 4mm},
-game/.style={circle, draw, minimum size = .35cm, fill = none},
-whole/.style={draw=black, thick, inner sep = 12pt, text height = 0mm},
-sub/.style={dashed, draw=black, thick, inner sep=7pt}, % Style for grouping
-ssub/.style={draw = black, thick, inner sep =2pt},
-sssub/.style={dashed, draw = black, thick, inner sep = 3pt},
-arrow/.style={draw, ->, color = RoyalBlue, line width = 1.7pt},
-]
-
-% Draw the binary tree with an edge label
-\node[game] (root) {}
-	child {node[game](11) {}
-		child {node[game](21){}
-			child {node[ellip](31) {\bigdots}
-				}
-			child {node[ellip](32) {\bigdots}
-				}
-			}
-		child {node[game](22) {}
-			child {node[ellip](33) {\bigdots}
-				}
-			child {node[ellip](34) {\bigdots}
-				}
-			}
-	}
-	child {node[game](12) {}
-		child {node[game](23){}
-			child {node[ellip](35) {\bigdots}
-				}
-			child {node[ellip] (36){\bigdots}
-				}
-			}
-		child {node[game](24){}
-			child {node[ellip](37) {\bigdots}
-				}
-			child {node[ellip](38) {\bigdots}
-				}
-			}
-	};
-\node[whole, label=above:{$X_n$}, fit = (root)(31)(38)] {};
-\node[sub, label=above:{$Y_{n-1}$}, fit = (11)(21)(22)(31)(34)]{};
-\node[sub, label=above:{$Y_{n-1}$}, fit = (12)(23)(24)(35)(38)]{};
-\node[ssub, label = above:{$X_{n-2}$}, fit = (21)(31)(32)]{};
-\node[ssub, label = above:{$X_{n-2}$}, fit = (22)(33)(34)]{};
-\node[ssub, label = above:{$X_{n-2}$}, fit = (23)(35)(36)]{};
-\node[ssub, label = above:{$X_{n-2}$}, fit = (24)(37)(38)]{};
-\end{tikzpicture}
+\input{tikz/sub-events.tikz}
 \caption{The sub-events of $X_n$}
 \label{subgames}
 \end{figure}
@@ -207,8 +76,6 @@ P(Y_n) = p^2P(X_{n-1})^2.\label{yn}
 \end{tikzpicture}
 \caption{something}
 \end{figure}
-
-
 
 We now return to the infinite game. To answer question \ref{infimum}, we need to determine for which values of $p$ $P(X_\infty) > 0$. First, let's find $P(X_\infty)$. If we take the limit as $n$ approaches infinity in \eqref{xn} then substitute in the value of $P(Y_n)$ from \eqref{yn}, we get
 \begin{align*}

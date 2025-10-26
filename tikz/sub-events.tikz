@@ -1,0 +1,53 @@
+\begin{tikzpicture}
+[
+scale = 1,
+level 1/.style={sibling distance=42mm, level distance = 1.2cm},
+level 2/.style={sibling distance=18mm, level distance = 1.5cm},
+level 3/.style={sibling distance = 8mm, level distance = 1cm},
+ellip/.style={text height = 4mm},
+game/.style={circle, draw, minimum size = .35cm, fill = none},
+whole/.style={draw=black, thick, inner sep = 12pt, text height = 0mm},
+sub/.style={dashed, draw=black, thick, inner sep=7pt}, % Style for grouping
+ssub/.style={draw = black, thick, inner sep =2pt},
+sssub/.style={dashed, draw = black, thick, inner sep = 3pt},
+arrow/.style={draw, ->, color = RoyalBlue, line width = 1.7pt},
+]
+
+% Draw the binary tree with an edge label
+\node[game] (root) {}
+	child {node[game](11) {}
+		child {node[game](21){}
+			child {node[ellip](31) {\bigdots}
+				}
+			child {node[ellip](32) {\bigdots}
+				}
+			}
+		child {node[game](22) {}
+			child {node[ellip](33) {\bigdots}
+				}
+			child {node[ellip](34) {\bigdots}
+				}
+			}
+	}
+	child {node[game](12) {}
+		child {node[game](23){}
+			child {node[ellip](35) {\bigdots}
+				}
+			child {node[ellip] (36){\bigdots}
+				}
+			}
+		child {node[game](24){}
+			child {node[ellip](37) {\bigdots}
+				}
+			child {node[ellip](38) {\bigdots}
+				}
+			}
+	};
+\node[whole, label=above:{$X_n$}, fit = (root)(31)(38)] {};
+\node[sub, label=above:{$Y_{n-1}$}, fit = (11)(21)(22)(31)(34)]{};
+\node[sub, label=above:{$Y_{n-1}$}, fit = (12)(23)(24)(35)(38)]{};
+\node[ssub, label = above:{$X_{n-2}$}, fit = (21)(31)(32)]{};
+\node[ssub, label = above:{$X_{n-2}$}, fit = (22)(33)(34)]{};
+\node[ssub, label = above:{$X_{n-2}$}, fit = (23)(35)(36)]{};
+\node[ssub, label = above:{$X_{n-2}$}, fit = (24)(37)(38)]{};
+\end{tikzpicture}

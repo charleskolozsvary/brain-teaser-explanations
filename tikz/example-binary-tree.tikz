@@ -1,0 +1,55 @@
+\begin{tikzpicture}
+[
+    scale = .65,
+    level 1/.style={sibling distance=60mm, level distance = \levelheight},
+    level 2/.style={sibling distance=30mm, level distance = \levelheight},
+    level 3/.style={sibling distance=15mm, level distance = \levelheight},
+    level 4/.style={sibling distance=7.5mm, level distance = \levelheight},
+    state/.style={circle,minimum size =.35cm, draw}
+]
+	\node[state] {}
+		child {node[state] {}
+			child {node[state] {}
+				child {node[state]{}
+					child {node[state]{}}
+					child {node[state]{}}
+				}
+				child {node[state]{}
+					child{node[state]{}}
+					child{node[state]{}}
+				}
+			}
+			child {node[state] {}
+				child {node[state]{}
+					child {node[state]{}}
+					child {node[state]{}}
+				}
+				child {node[state]{}
+					child{node[state]{}}
+					child{node[state]{}}
+				}
+			}
+		}
+		child {node[state] {}
+		    	child {node[state] {}
+				child {node[state]{}
+					child {node[state]{}}
+					child {node[state]{}}
+				}
+				child {node[state]{}
+					child{node[state]{}}
+					child{node[state]{}}
+				}
+			}
+		    	child {node[state] {}
+				child {node[state]{}
+					child {node[state]{}}
+					child {node[state]{}}
+				}
+				child {node[state]{}
+					child{node[state]{}}
+					child{node[state]{}}
+				}
+			}
+		};
+\end{tikzpicture}

@@ -35,10 +35,6 @@ For example, \[\set{1, 2} \times \set{a, b, c} = \set{(1, a), (1, b), (1, c), (2
 For finite $S$ and $T$, what is $|S \times T|$ in terms of $|S|$ and $|T|$?
 \end{exercise}
 
-%% The title of this subsection is a set that comes up a lot in mathematics. Putting aside rigor, the real numbers are those that can be written as an infinite string of digits, repeating or otherwise, such as $3.1415926\dots = \pi$ or $-0.0000000100003$. These numbers
-
-%% This brief description misses some important and fascinating details that the curious reader might want to look into by searching ``transcendental vs. algebraic numbers.''
-
 \subsection{Bounds of sets}
 A set may have lower (or upper) bounds when its elements can be ordered. For example, consider the set $H = \set{0, 1, 2, 3}$. The number $-100$ is a lower bound of $H$ because it is less than or equal to every element of $H$. However, there are greater lower bounds, such as $-99$, $-98$, and so on.
 \begin{exercise}\label{lowerbound}
@@ -51,63 +47,10 @@ Are the infimum and minimum of a set always the same? If they aren't, give an ex
 
 \section{Binary Trees}
 Figure \ref{tree}: the circles are called nodes, and the lines connecting them are called edges. The topmost node is called the root, and the bottom nodes are called leaves. The root has two descendants (hence the adjective ``binary''), each of which has two descendants of their own and so on. The depth of a tree is the number of edges between the root and any of its leaves; this tree's depth is four.
+
 \begin{figure}[ht]
 \centering
-\begin{tikzpicture}
-[
-    scale = .65,
-    level 1/.style={sibling distance=60mm, level distance = \levelheight},
-    level 2/.style={sibling distance=30mm, level distance = \levelheight},
-    level 3/.style={sibling distance=15mm, level distance = \levelheight},
-    level 4/.style={sibling distance=7.5mm, level distance = \levelheight},
-    state/.style={circle,minimum size =.35cm, draw}
-]
-	\node[state] {}
-		child {node[state] {}
-			child {node[state] {}
-				child {node[state]{}
-					child {node[state]{}}
-					child {node[state]{}}
-				}
-				child {node[state]{}
-					child{node[state]{}}
-					child{node[state]{}}
-				}
-			}
-			child {node[state] {}
-				child {node[state]{}
-					child {node[state]{}}
-					child {node[state]{}}
-				}
-				child {node[state]{}
-					child{node[state]{}}
-					child{node[state]{}}
-				}
-			}
-		}
-		child {node[state] {}
-		    	child {node[state] {}
-				child {node[state]{}
-					child {node[state]{}}
-					child {node[state]{}}
-				}
-				child {node[state]{}
-					child{node[state]{}}
-					child{node[state]{}}
-				}
-			}
-		    	child {node[state] {}
-				child {node[state]{}
-					child {node[state]{}}
-					child {node[state]{}}
-				}
-				child {node[state]{}
-					child{node[state]{}}
-					child{node[state]{}}
-				}
-			}
-		};
-\end{tikzpicture}
+\input{tikz/example-binary-tree.tikz}
 \caption{An example binary tree.}
 \label{tree}
 \end{figure}
@@ -163,7 +106,6 @@ Suppose events $E$ and $F$ are independent. Can you guess what $\displaystyle P(
 \begin{exercise}\label{q:cup}
 Let $E$ and $F$ be any two events. What is $P(E \cup F)$ in terms of $P(E)$, $P(F)$, and $\displaystyle P(E \cap F)$? \emph{Hint}: Consider the event of rolling an even or prime number with a d6, and draw a Venn diagram.
 \end{exercise}
-
 
 \section{Polynomials}
 \subsubsection*{In general.}

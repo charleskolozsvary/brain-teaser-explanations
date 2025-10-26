@@ -13,7 +13,7 @@ our $program_name = 'manucombine.pl';
 
 our %OPT = (addto    => '',
             preamble => 'preamble.tex',
-            combinedf => 'combined.tex',
+            outname => 'combined.tex',
             class   => '');
 
 #########################################################
@@ -24,7 +24,7 @@ our %OPT = (addto    => '',
 
 sub usage() {
     my $usage = << "EOF";
-Usage: $program_name [options] tex_file1 tex_file2 tex_file3 etc.
+Usage: $program_name [options] filenames-file
 
 Combine LaTeX files into one, including from each only what is between
 \\begin{document} and \\end{document}.
@@ -40,17 +40,33 @@ The form of the combined file is
 \\end{document}
 ```
 
+where `filenames-file' contains
+```
+texfile1.tex
+texfile2.tex
+texfile3.tex
+etc.
+```
+
+Each tex file in filenames-file is assumed to be of the form
+```tex
+\\documentclass{[class]}
+\\input{preamble.tex}
+\\begin{document}
+[body]
+\\end{document}
+```
+
+
 Options:
     -help               : Print this help text and quit.
 
-    -addto=filename     : Add files to the body of the supplied file
-
     -preamble=filename  : Specify a common preamble file (default is 'preamble.tex')
 
-    -combinedf=filename : Specify combined file name (default is 'combined.tex')
+    -outname=filename   : Specify combined file name (default is 'combined.tex')
 
     -class=string       : Specify the argument of \\documentclass{}
-                          (default is 'article')
+                          (default is 'book')
 
 EOF
 
@@ -75,13 +91,6 @@ sub getFileText {
     return $file_text;
 }
 
-sub getUpToEnd {
-    my $fname = shift;
-    my $file_text = getFileText($fname);
-    $file_text =~ m{(?<up_to_end>.*?)\\end\s*\{\*document\*\}}s; #s modifier so . matches \n
-    return $+{up_to_end};
-}
-
 sub getBodies {
     my @filenames = @_;
     my $bodies = '';
@@ -94,23 +103,27 @@ sub getBodies {
     return $bodies;
 }
 
+sub getFilenames {
+    my $filename_file = shift;
+    my $text = getFileText($filename_file);
+    my @filenames = $text =~ m{(\S+)}g;
+    return @filenames;
+}
+
 sub combineFiles {
-    my @filenames = @_;
+    my $filename_file = shift;
     
-    my $combinedfname = $OPT{combinedf};
+    my $outname = $OPT{outname};
     my $preamblefname = $OPT{preamble};
-    my $class = !$OPT{class} ? 'article' : $OPT{class};
+    my $class = !$OPT{class} ? 'book' : $OPT{class};
+
+    my @filenames = getFilenames($filename_file);
 
     my $bodies = getBodies(@filenames);
 
-    open(my $combFH, '>', $combinedfname) or die "Couldn't write to $combinedfname $!";
+    open(my $combFH, '>', $outname) or die "Couldn't write to $outname $!";
 
-    if ($OPT{addto}){
-	print $combFH getUpToEnd($combinedfname);
-    }
-    else {
-	print $combFH "\\documentclass{$class}\n\\input{$preamblefname}\n\\begin{document}\n";
-    }
+    print $combFH "\\documentclass{$class}\n\\input{$preamblefname}\n\\begin{document}\n";
 
     print $combFH $bodies;
 
@@ -126,32 +139,28 @@ sub combineFiles {
 ##                                                     ##
 #########################################################
 
-GetOptions("addto=s"     => \$OPT{addto},
+GetOptions("class=s"     => \$OPT{class},
+	   "outname=s"   => \$OPT{outname},
 	   "preamble=s"  => \$OPT{preamble},
-	   "combinedf=s" => \$OPT{combinedf},
-	   "class=s"     => \$OPT{class},
 	   "help"        => \&usage,
     ) or usage;
 
-usage unless @ARGV > 0;
+usage unless @ARGV == 1;
 
-if ($OPT{addto}){
-    $OPT{combinedf} = $OPT{addto};
-    if (! -e $OPT{combinedf}){
-	die "File to add to '$OPT{combinedf}' does not exist. Aborting $program_name";
-    }
-    if ($OPT{class}){
-	print "WARNING: You have supplied -class with -addto which will be ignored.\n(The document class of the file to add to is not overwritten.)\n";
-    }
-    if ($OPT{preamble}){
-	print "WARNING: You have supplied -preamble with -addto which will be ignored.\n(The preamble of the file to add to is not overwritten.)\n";
-    }
+# if (-e $OPT{outname}){
+#     print "\nFile $OPT{outname} already exists, overwrite it? (yes/no)\n";
+#     my $answer = <STDIN>;
+#     die "Aborting $program_name" if !($answer =~ m{^yes\n$}i);
+# }
+
+if (! -e $OPT{preamble}){
+    die "File '$OPT{preamble}' does not exist. Aborting $program_name\n";
 }
 
-if (-e $OPT{combinedf}){
-    print "file $OPT{combinedf} already exists, overwrite it? (yes/no)\n";
-    my $answer = <STDIN>;
-    die "Aborting $program_name" if !($answer =~ m{^yes\n$}i);
+if ($OPT{class} && (! $OPT{class} =~ m{^(?:article|book)$})){
+    die "Document class '$OPT{class}' neither book or article. Aborting $program_name.\n";
 }
 
-combineFiles(@ARGV);
+my $filenames_file = shift;
+
+combineFiles($filenames_file);
