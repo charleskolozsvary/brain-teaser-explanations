@@ -1,0 +1,165 @@
+\documentclass{book}
+\input{preamble.tex}
+\begin{document}
+\appendix
+\chapter{Answers to the Exercises}\label{answers}
+\renewcommand{\thechapter}{\arabic{chapter}}
+\begin{answer}
+If $P(E) = p$, then $P(\neg E) = 1 - p$.
+\end{answer}
+
+\begin{answer}%two
+  Answer two.
+\end{answer}
+
+\begin{answer}%three
+  Answer three.
+\end{answer}
+
+\begin{answer}%four
+  Answer four.
+\end{answer}
+
+\begin{answer}%five
+  Answer five.
+\end{answer}
+
+\begin{answer}%six
+  Answer six.
+\end{answer}
+
+\begin{answer}%seven
+  Answer seven.
+\end{answer}
+
+\begin{answer}%eight
+  Answer eight.
+\end{answer}
+
+\begin{answer}%nine
+  Answer nine.
+\end{answer}
+
+\begin{answer}%ten
+  Answer ten.
+\end{answer}
+
+\begin{answer}%eleven
+  Answer eleven.
+\end{answer}
+
+\begin{answer}%twelve
+  Answer twelve.
+\end{answer}
+
+
+
+\begin{exercise*}[\ref{q:cap}]
+When $E$ and $F$ are independent, finding $P(E \cap F)$ is straightforward because the sample space is simply the set of all pairs of possible outcomes from $E$ and $F$, i.e., $\Omega = \Omega_E \times \Omega_F$, where $\Omega_G$ is the sample space of an event $G$. As a result,
+\begin{equation*}
+P(E \cap F) = \frac{\#(E \cap F)}{|\Omega_E \times \Omega_F|}
+= \frac{\#(E) \cdot \#(F)}{|\Omega_E| \cdot |\Omega_F|}
+= P(E) \cdot P(F),
+\end{equation*} 
+where $\#(G)$ denotes the number of outcomes where event $G$ occurs (in its sample space). See Figure \ref{product} for an example.
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}
+[
+scale = 1.25,
+v/.style = {Apricot, line width = 9mm},
+h/.style = {Salmon, line width = 7mm},
+rect/.style = {very thick}
+]
+\foreach \i in {1, 2, 3, 4, 5}{
+	\foreach \j in {1, 2, 3, 4}{
+		\coordinate (hs\j) at (.5, \j);
+		\coordinate (he\j) at (5.35,\j);
+		\coordinate (vs\i) at (\i, .75);
+		\coordinate (ve\i) at (\i, 4.3);
+	}
+}
+\begin{scope}[blend mode=screen]
+\filldraw[v] (vs2) rectangle (ve2);
+\filldraw[v] (vs3) rectangle (ve3);
+\filldraw[v] (vs5) rectangle (ve5);
+\filldraw[h] (hs2) rectangle (he2);
+\filldraw[h] (hs4) rectangle (he4);
+\end{scope}
+\foreach \i in {1, 2, 3, 4, 5}{
+	\foreach \j in {1, 2, 3, 4}{
+		\coordinate (\i\j) at (\i, \j);
+		\node (n\i\j) at (\i\j) {(\i, \j)};
+		\coordinate (obl\i\j) at (\i -.375, \j -.275);
+		\coordinate (otr\i\j) at (\i + .375, \j + .275);
+	} 
+}
+\foreach \i in {1, 2, 3, 4, 5}{
+\node at (\i, 4.65) {\i};
+}
+\foreach \i in {1, 2, 3, 4}{
+\node at (.25, \i) {\i};
+}
+\draw[rect] (obl24) rectangle (otr24);
+\draw[rect] (obl54) rectangle (otr54);
+\draw[rect] (obl34) rectangle (otr34);
+\draw[rect] (obl22) rectangle (otr22);
+\draw[rect] (obl32) rectangle (otr32);
+\draw[rect] (obl52) rectangle (otr52);
+\end{tikzpicture}
+\caption{The elements of $\Omega_{D_5} \times \Omega_{D_4}$. Let $X$ be the event where $D_5$ is prime, and let $Y$ be the event where $D_4$ is even. The outcomes where $X \cap Y$ occurs are boxed, and we can verify that $P(X \cap Y) = 6/20$ matches $P(X) \cdot P(Y) = \frac{3}{5} \cdot \frac{2}{4}$.}
+\label{product}
+\end{figure}
+\end{exercise*}
+
+
+\begin{exercise*}[\ref{q:cup}]
+Venn diagram properties shown in Figure \ref{vennd} reveal that for any two events $E$ and $F$, \[P(E \cup F) = P(E) + P(F) - P(E \cap F).\]
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[scale = 1.15]
+    % Define colors for the sets
+    \begin{scope}[blend mode=overlay]
+        % Draw the first set (A)
+        \fill[Periwinkle] (-1,0) circle (1.5);
+        % Draw the second set (B)
+        \fill[Dandelion] (1,0) circle (1.5);
+    \end{scope}
+    
+    \node at (-1.15, .7) (4){{\large 4}};
+    \node at (-1.25, -.7) (6){{\large 6}};
+    \node at (0, 0) (2) {{\large 2}};
+    \node at (1.15, .7) (3){{\large 3}};
+    \node at (1.25, -.7) (5){{\large 5}};
+    \node at (-1,1.75) (E){{\large $E$}};
+    \node at (2.5, 1.5) (1){{\large 1}};
+    \node at (1,1.75) (F){{\large $F$}};
+    \node at (0,-1.75) (EandF){{\large $E \cap F$}};
+    \node at (0, -.7) (point){};
+    \node at (-2.75, 0) (leftbox){};
+    \node at (2.75, 0) (rightbox){};
+    
+    % Draw outlines for the sets
+    \draw[thick] (-1,0) circle (1.5) node(Ev) {}; % Set A
+    \draw[thick] (1,0) circle (1.5) node(Fv) {}; % Set B
+    \draw[->, dotted, thick] (EandF) -- (point);
+    \node[draw, inner sep = 3pt, very thick, fit = (Ev)(Fv)(EandF)(leftbox)(rightbox)(E)(F), label = above:{{\LARGE $\Omega$}}]{};
+\end{tikzpicture}
+\caption{A Venn diagram of two events in d6's sample space. $E$ is the event that the roll is even, and $F$ is the event that the roll is prime. So $P(E \cup F) = P(E) + P(F) - P(E \cap F) = 3/6 + 3/6 - 1/6 = 5/6$.}
+\label{vennd}
+\end{figure}
+\end{exercise*}
+
+\begin{exercise*}[{\ref{completesquare}}] We first notice that
+\[(x + h)^2 = x^2 + 2hx + h^2\] so \[\left(x + \frac{b}{2a}\right)^2 = x^2 + \frac{b}{a}x + \frac{b^2}{4a^2}.\] Then
+\begin{align*}
+ax^2 + bx + c &= 0\\
+x^2 + \frac{b}{a}x + \frac{c}{a} &= 0\\
+x^2 + \frac{b}{a}x + \frac{b^2}{4a^2} + \frac{c}{a} &= \frac{b^2}{4a^2}\\
+\left(x + \frac{b}{2a}\right)^2 + \frac{c}{a} &= \frac{b^2}{4a^2}\\
+\left(x + \frac{b}{2a}\right)^2 &= \frac{b^2-4ac}{4a^2}\\
+x + \frac{b}{2a} &= \pm\sqrt{\frac{b^2}{4a^2}}\\
+x &= \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}.
+\end{align*}
+\end{exercise*}
+\end{document}

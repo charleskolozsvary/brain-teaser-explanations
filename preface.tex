@@ -1,0 +1,31 @@
+\documentclass{book}
+\input{preamble.tex}
+\begin{document}
+\chapter*{Preface}
+I heard from a friend in December 2022 that a company called Jane Street posts a ``puzzle'' each month. But they aren't typical puzzles (like jig-saws or crosswords), they are usually, rather, math-heavy brain teasers. For instance, the December 2022 puzzle, \emph{Die Agony}, goes as follows:
+\[
+\input{die-agony-grid}
+\]
+\begin{quote}
+A six-sided die, with numbers written on each of its faces, is placed on the 6-by-6 grid above, in the lower-left (yellow) corner. It then makes a sequence of ``moves''. Each move consists of tipping the die into an orthogonally adjacent square within the grid.
+
+The die starts with a ``score'' of 0. On the $N$th move, its score increases by $N$ times the value of the die facing up after the move. However, the die is only allowed to move into a square if its score after the move matches the value in the square. Also, the die cannot be translated or rotated in place in addition to these moves.
+
+After some number of moves the die arrives in the upper-right (blue) corner.
+
+The answer to this puzzle is the sum of values in the unvisited squares from the die's journey.
+\end{quote}
+
+If you think this is cool, great!\footnote{Needless to say, I had a lot of fun solving it; it was especially satisfying to get to apply a bit of group theory I learned during that semester. I realized I could represent the effect of tipping the die in different directions on the arrangement of the die faces with members from $S_6$, the group of permutations with six elements. For example, if the top, east, north, west, south, and bottom faces of the die (from a bird's-eye view perspective) are respectively labelled 1, 2, 3, 4, 5, and 6, tipping the die to the right corresponds to the permutation $(1264)$ in \emph{cycle notation}. I.e., 1 goes to 2, 2 goes to 6, 6 goes to 4, 4 goes to 1, and 3 and 5 don't change. See \url{https://en.wikipedia.org/wiki/Permutation#Cycle_notation} for more.} The purpose of what follows is to explore many more brain teasers like this and explain their solutions in depth. If you're already fairly comfortable with coding and doing some undergraduate math, I absolutely recommend you
+start working on the current Jane Street puzzle (or, if it doesn't suit your fancy, any of the other ones in the archive).
+
+If you're not so familiar with math and computer science but want to hear more interesting problems and their solutions, that's maybe even more awesome.
+Chapter \ref{preliminaries} is dedicated to bringing anyone up to speed so that they can understand and try to solve the problems that follow. Admittidely, however, that is a really tall order, and it might not even be practical,\footnote{To adequately fill in the necessary background for approaching these puzzles, you might just need to \dots write the lecture notes and textbooks for several undergraduate math courses. Also some of these problems are plenty crazy even for those who have studied undergraduate math (speaking as someone who has). Take for example August 2023's Single-Cross 2:
+\begin{quote}
+  Consider 3-space (i.e.\ $\mathbf{R}^3$) partitioned into a grid of unit cubes with faces defined by the planes of all points with at least one integer coordinate. For a fixed positive real number $D$, a random line segment of length $D$ (chosen uniformly in location and orientation) is placed in this cubic lattice.
+
+  What length $D$ maximizes the probability that the endpoints of the segment lie in orthogonally adjacent unit cubes (that is, the segment crosses exactly one integer-coordinate plane), and what is this maximal probability? Give your answer as a \textbf{comma-separated pair of values to 10 significant places} (e.g.\ ``1.234567891,0.2468135792'').
+\end{quote}} so it will almost certainly fall short. In fact, in it's current state, I don't know if Chapter \ref{preliminaries} is helpful at all. But with any luck that will change in the future!
+
+Anyway, if you're not so hung up on learning background info and just want to jump into a puzzle, head on over to Chapter \ref{triage}---I'll see you there!
+\end{document}
